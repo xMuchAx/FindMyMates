@@ -8,7 +8,7 @@ from ..models import User
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["username", "password", "avatar_path", "bio"]
+        fields = ["username", "password", "avatar", "bio"]
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
