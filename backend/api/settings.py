@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'users.apps.UsersConfig',
-    'events.apps.EventsConfig'
+    'events.apps.EventsConfig',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
