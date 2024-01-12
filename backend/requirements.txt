@@ -2,3 +2,4 @@ django
 djangorestframework
 mysqlclient
 pillow
+django-cors-headers
