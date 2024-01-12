@@ -1,13 +1,13 @@
+import uuid
 from users.models import User
 from django.db import models
 
 class Event(models.Model):
 
-    id = models.AutoField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     host = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=32)
     description = models.CharField(max_length=255)
-
     date = models.DateField()
     time = models.TimeField()
     duration = models.DurationField()
@@ -18,7 +18,7 @@ class Event(models.Model):
         db_table='events'
 
 class EventHistory(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
