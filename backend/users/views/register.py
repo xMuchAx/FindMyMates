@@ -9,7 +9,7 @@ from ..models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["username", "email", "password"]
+        fields = ["username", "email", "password", "avatar_path", "bio"]
 
 @api_view(['POST'])
 def register(request):
