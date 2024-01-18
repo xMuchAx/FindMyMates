@@ -3,3 +3,5 @@ django-cors-headers
 djangorestframework
 mysqlclient
 pillow
+drf-yasg
+django-filter==23.2
