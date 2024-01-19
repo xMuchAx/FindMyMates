@@ -1,7 +1,7 @@
-from rest_framework import serializers
-from rest_framework.response import Response
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.response import Response
+from rest_framework import serializers
 
 from ..models import User
 
@@ -10,7 +10,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = ["username", "password", "avatar", "bio"]
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
 def update_profile(request):
     if(request.user.is_authenticated):

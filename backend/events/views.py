@@ -1,7 +1,6 @@
-from django.shortcuts import render
 from events.models import Event, EventHistory, EventUserFavori
 from events.serializer import  EventSerializer, EventHistorySerializer, EventHistoryDetailSerializer, EventUserFavoriSerializer
-from rest_framework import viewsets,  generics, mixins, status
+from rest_framework import viewsets,  generics, status
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -9,14 +8,10 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.decorators import renderer_classes
 from rest_framework.decorators import action
 
-
-
-# Create your views here.
-#
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    
+
     @swagger_auto_schema(
     method='post',
     request_body=openapi.Schema(
@@ -38,9 +33,6 @@ class EventViewSet(viewsets.ModelViewSet):
           return Response(serializer.data)
        except Event.DoesNotExist:
           return Response([])
-       
-
-
 
 class EventHistoryViewSet(generics.CreateAPIView):
     queryset = EventHistory.objects.all()
@@ -64,17 +56,15 @@ class EventHistoryViewSet(generics.CreateAPIView):
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    
 
-      
 class EventFavoriViewSet(viewsets.ModelViewSet):
     queryset = EventUserFavori.objects.all()
     serializer_class = EventUserFavoriSerializer
-    lookup_field = 'user' 
+    lookup_field = 'user'
     def get_serializer_class(self):
         if self.action in  ['create', 'update']:
             return EventUserFavoriSerializer
-    
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         user_id = request.data.get('user')
@@ -90,7 +80,7 @@ class EventFavoriViewSet(viewsets.ModelViewSet):
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    
+
     @swagger_auto_schema(
     method='post',
     request_body=openapi.Schema(
@@ -112,6 +102,3 @@ class EventFavoriViewSet(viewsets.ModelViewSet):
           return Response(serializer.data)
        except Event.DoesNotExist:
           return Response([])
-       
-    
-    
