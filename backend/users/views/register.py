@@ -13,7 +13,7 @@ from ..models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["username", "email", "avatar", "bio"]
+        fields = ["username", "email", "avatar", "bio", "password"]
 
 
 @swagger_auto_schema(method='post', request_body=UserSerializer, responses={201: 'Created', 422: 'Unprocessable Entity'})

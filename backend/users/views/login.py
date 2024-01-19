@@ -29,6 +29,6 @@ def login(request):
 
     if(user.check_password(request.data.get("password"))):
         token = Token.objects.get(user=user)
-        return Response({"token": token.key, "message": "User logged in successfully"}, status=200)
+        return Response({"token": token.key,"user": user.id, "message": "User logged in successfully"}, status=200)
     else:
         return Response({"message": "Wrong password"}, status=401)

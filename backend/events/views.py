@@ -53,6 +53,9 @@ class EventHistoryViewSet(generics.CreateAPIView):
 
         # Vérifiez si l'utilisateur est déjà membre de cet événement
         existing_membership = EventHistory.objects.filter(user=user_id, event=event_id).first()
+        host_event = Event.objects.get(host = user_id, id = event_id )
+        if host_event:
+            return Response({"message": "Vous êtes l'organisateur de cet événement."}, status=status.HTTP_400_BAD_REQUEST)
 
         if existing_membership:
             return Response({"message": "Vous êtes déjà membre de cet événement."}, status=status.HTTP_400_BAD_REQUEST)
