@@ -1,2 +1,1 @@
-from . import login
-from . import register
+from . import login, register, update, delete

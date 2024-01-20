@@ -1,0 +1,56 @@
+/* Profile.css */
+body {
+    background-color: white;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.profile-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.profile-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #5669FF;
+}
+
+.profile-picture img {
+    max-width: 200px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.edit-profile-button {
+    padding: 10px;
+    background-color: white;
+    color: #5669FF;
+    font-weight: bold;
+    border: 1px solid #5669FF ; /* Ajout de la bordure */
+    border-radius: 4px;
+    cursor: pointer;
+  }
+.username {
+    font-size: 1.2rem; /* Taille de la police pour le nom d'utilisateur */
+    margin-top: 10px; /* Espace entre la photo de profil et le nom d'utilisateur */
+    color: #5669FF;  
+}
+  .about-me-section {
+    margin-top: 20px;
+}
+
+.about-me-section h2 {
+    text-align: left;
+    margin-bottom: 10px;
+    color: #5669FF;
+}
+
+.about-me-textarea {
+    width: 100%;
+    height: 100px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical; /* Permet à l'utilisateur de redimensionner verticalement */
+}
