@@ -52,7 +52,7 @@ class EventHistoryViewSet(viewsets.ModelViewSet):
         host_event = Event.objects.filter(host = user_id, id = event_id ).first()
         event = Event.objects.filter(id = event_id ).first()
         if event.vacant_places == 0:
-            return Response({"message": "L'équipe est complete"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "L'équipe est complete."}, status=status.HTTP_400_BAD_REQUEST)
 
         if host_event:
             return Response({"message": "Vous êtes l'organisateur de cet événement."}, status=status.HTTP_400_BAD_REQUEST)
