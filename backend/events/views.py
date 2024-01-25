@@ -1,5 +1,5 @@
-from events.models import Event, EventHistory, EventUserFavori
-from events.serializer import  EventSerializer, EventHistorySerializer, EventHistoryDetailSerializer, EventUserFavoriSerializer
+from events.models import Event, EventHistory, EventUserFavori, Game
+from events.serializer import  EventSerializer, EventHistorySerializer, GameSerializer, EventUserFavoriSerializer
 from rest_framework import viewsets,  generics, status
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
@@ -102,3 +102,9 @@ class EventFavoriViewSet(viewsets.ModelViewSet):
           return Response(serializer.data)
        except Event.DoesNotExist:
           return Response([])
+
+class GameViewSet(viewsets.ModelViewSet):
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
+
+  

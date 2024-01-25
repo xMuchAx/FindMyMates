@@ -36,3 +36,13 @@ class EventUserFavori(models.Model):
 
     class Meta:
         db_table='favoris'
+        
+        
+
+class Game(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=32)
+    event_number = models.IntegerField()
+    avatar = models.CharField(max_length=500)
+    class Meta:
+        db_table='game'

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from users.views.register import UserSerializer
-from events.models import Event, EventUserFavori
+from events.models import Event, EventUserFavori,Game
 from events.models import EventHistory
 
 
@@ -54,4 +54,10 @@ class EventUserFavoriSerializer(serializers.ModelSerializer):
         model = EventUserFavori
         fields = '__all__'
 
-               
+class GameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Game
+        fields = '__all__'
+
+                             
