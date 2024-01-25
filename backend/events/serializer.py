@@ -1,11 +1,12 @@
 from rest_framework import serializers
-from users.views.register import UserSerializer
+from users.serializer import UserSerializer
 from events.models import Event, EventUserFavori,Game
 from events.models import EventHistory
 
 
 class EventSerializer(serializers.ModelSerializer):
     event_members = serializers.SerializerMethodField()
+    avatar_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -15,6 +16,7 @@ class EventSerializer(serializers.ModelSerializer):
         event_history = EventHistory.objects.filter(event=obj)
         serializer = EventHistoryDetailSerializer(event_history, many=True)
         return serializer.data
+    
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         
@@ -22,8 +24,15 @@ class EventSerializer(serializers.ModelSerializer):
         representation['event_members'] = [
             {'user': member['user']} for member in event_members
         ]
-        
         return representation
+    
+    
+    def get_avatar_url(self, obj):
+        if obj.avatar:
+            return self.context['request'].build_absolute_uri(obj.avatar.url)
+        return None
+
+    
 
 
         
