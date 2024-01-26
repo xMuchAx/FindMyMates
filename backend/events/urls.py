@@ -12,11 +12,14 @@ urlpatterns = [
     path('partial-update-event/<str:pk>/', EventViewSet.as_view({'patch': 'partial_update'}), name='partial-update-event'),
     path('event-detail/<str:pk>/', EventViewSet.as_view({'get': 'retrieve'}), name='event-detail'), 
     path('joined-event/', EventHistoryViewSet.as_view({'post': 'create'}), name='joined-event'),
+    path('event-history/list/<str:iduser>/', EventHistoryViewSet.as_view({'get': 'user_history'}), name='user-history'),
+    path('history/', EventHistoryViewSet.as_view({'post': 'user_event_history'}), name='event-user-history'),
     path('search-event_by-game/', EventViewSet.as_view({'post': 'search_event'}), name='search-event'),
     path('favorites/', EventFavoriViewSet.as_view({'post': 'event_favorites',}), name='event-favoris-detail'),
     path('add-favorite/', EventFavoriViewSet.as_view({'post': 'create'}), name='add-favorite'),
     path('game_created/', GameViewSet.as_view({'post': 'create'}), name='create_game'),
     path('games/', GameViewSet.as_view({'get': 'list'}), name='list-game'),
+    
 
 
  

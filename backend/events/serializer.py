@@ -6,7 +6,6 @@ from events.models import EventHistory
 
 class EventSerializer(serializers.ModelSerializer):
     event_members = serializers.SerializerMethodField()
-    avatar_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -27,28 +26,29 @@ class EventSerializer(serializers.ModelSerializer):
         return representation
     
     
-    def get_avatar_url(self, obj):
-        if obj.avatar:
-            return self.context['request'].build_absolute_uri(obj.avatar.url)
-        return None
-
-    
-
-
         
 
 class EventHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = EventHistory
         fields = '__all__'
+   
         
 class EventHistoryDetailSerializer(serializers.ModelSerializer):
-     # event = EventSerializer(many = True, read_only = True)
     user = UserSerializer(read_only = True)
     
     class Meta:
         model = EventHistory
         fields = ['user']
+        
+       
+class UserEventHistoryDetailSerializer(serializers.ModelSerializer):
+    event = EventSerializer(read_only = True)
+
+    
+    class Meta:
+        model = EventHistory
+        fields = ['event', ]
         
 class EventUserDetailFavoriSerializer(serializers.ModelSerializer):
     event = EventSerializer(read_only = True)
