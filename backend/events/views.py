@@ -17,26 +17,15 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     # permission_classes = [IsAuthenticated]
     @swagger_auto_schema(
-    method='post',
-    request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        required=['event_name'],
-        properties={
-            'game': openapi.Schema(type=openapi.TYPE_STRING),
-        }
-    ),
+    method='get',
+    responses={200: EventSerializer(many=True)}
 )
     @renderer_classes([JSONRenderer])
-    @action(detail=False, methods=['post'])
-    def search_event(self, request, *args, **kwargs):
-       try:
-          name = request.data.get('game')
-          event = Event.objects.filter(game = name)
-          serializer = self.get_serializer(event, many=True)
-
-          return Response(serializer.data)
-       except Event.DoesNotExist:
-          return Response([])
+    @action(detail=False, methods=['get'])
+    def search_event(self, request, game=None):
+        events = Event.objects.filter(game=game)
+        serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)
 
 class EventHistoryViewSet(viewsets.ModelViewSet):
     queryset = EventHistory.objects.all()
@@ -112,6 +101,9 @@ class EventHistoryViewSet(viewsets.ModelViewSet):
 
        except Event.DoesNotExist:
           return Response([])
+      
+    def delete_user_history():
+        ...
         
 
 class EventFavoriViewSet(viewsets.ModelViewSet):
@@ -163,6 +155,8 @@ class EventFavoriViewSet(viewsets.ModelViewSet):
           return Response(serializer.data)
        except Event.DoesNotExist:
           return Response([])
+      
+    
 
 class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all()
