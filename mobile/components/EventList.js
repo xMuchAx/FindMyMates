@@ -24,7 +24,6 @@ const EventList = ({ nameGame }) => {
         console.error('Erreur lors de la récupération des données d\'événement :', error);
       }
     };
-    console.log("test")
     fetchData(); // Appelez la fonction fetchData pour effectuer l'appel à l'API lorsque le composant est monté
   }, [nameGame]);
 
