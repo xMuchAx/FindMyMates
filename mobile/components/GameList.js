@@ -22,7 +22,6 @@ const GameList = () => {
   }, []);
 
   function DisplayListEventByGame(nameGame) {
-    console.log("bonnnn" + nameGame);
     navigation.navigate('EventByGame', { nameGame: nameGame });
   }
 

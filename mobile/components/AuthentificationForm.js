@@ -26,7 +26,7 @@ function AuthentificationForm({mode, navigation}) {
 
         const response = await callApi('http://localhost:8000/user/login/','POST',data);
         const token = response.token;
-        const id_user = response['user-id'];
+        const id_user = response['user_id'];
 
         if (token) {
           login(token, id_user);
