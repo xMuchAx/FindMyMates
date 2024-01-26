@@ -27,6 +27,7 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        theme: "#6e4ab5",
         bg1: "#C2A4FF",
         sidebar_bg: "#C2A4FF1A",
         btn_hover: "#6E4AB5",
@@ -80,7 +81,14 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addBase, config }) {
+      addBase({
+        button: { borderWidth: "0" },
+      });
+    },
+  ],
 } satisfies Config;
 
 export default config;

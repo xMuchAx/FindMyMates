@@ -7,9 +7,12 @@ import { col1, col2 } from "../theme/colors"
 import request from "../request"
 import { useState } from "react"
 import { baseServerUrl } from "../config"
+import {AuthContext} from "../AuthContext"
+import { useContext } from 'react';
 
 function Login() {
   const navigate = useNavigate()
+  const authContext = useContext(AuthContext);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,6 +32,14 @@ function Login() {
 
       userId = data.id
       token = data.token
+
+
+
+      if (authContext !== null) {
+        authContext.setAuth({ userId, token });
+      } else {
+        throw new Error("AuthContext is null");
+      }
     }
     catch (error) {
       alert("Wrong email or password")

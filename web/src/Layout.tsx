@@ -3,6 +3,11 @@ import { Routes, Route } from "react-router-dom";
 import { Sidebar } from "@/components/Sidebar";
 import { Input } from "@/components/ui/input";
 import Home from "@/views/Home";
+import Game from "./views/Game";
+import { Save } from "lucide-react";
+import Profile from "./views/Profile";
+import logo from "./assets/logo.svg";
+import { Avatar, AvatarFallback, AvatarImage } from "./components/ui/avatar";
 
 const sidebarItems = [
   {
@@ -13,48 +18,55 @@ const sidebarItems = [
   {
     title: "Game",
     href: "/game",
-    component: Home, // change this to Game when ready
+    component: Game, // change this to Game when ready
   },
   {
     title: "Save",
     href: "/save",
-    component: Home,
+    component: Save,
   },
   {
     title: "Profile",
     href: "/profile",
-    component: Home,
+    component: Profile,
   },
 ];
 
-const Layout = () => {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="w-full h-1/4 bg-bg1 flex space-x-4 ">
-        <div className="flex flex-col mb-3 px-2 ">
-          {/* <div className="w-16 h-16">
-            <Logo />
-          </div> */}
-          <p className="text-white text-2xl">User</p>
-        </div>
-        <Input
-          placeholder="Search"
-          className="mx-auto my-auto w-1/2 rounded-lg shadow-lg"
-        />
-      </div>
-      <div className="flex flex-col space-y-8 h-full lg:flex-row lg:space-x-12 lg:space-y-0">
+    <div className="w-full h-full flex">
+      <div className="h-full bg-sidebar_bg drop-shadow-xl">
+        <img src={logo} alt="logo" className="w-64 h-64 mx-30" />
         <Sidebar items={sidebarItems} />
-        <div className="flex-1 lg:max-w-2xl">
-          <Routes>
-            {sidebarItems.map((item) => (
-              <Route
-                key={item.href}
-                path={item.href}
-                element={<item.component />}
-              />
-            ))}
-          </Routes>
+      </div>
+      <div className="flex-1 flex flex-col space-y-4">
+        <div className="h-1/4 bg-theme flex justify-between ">
+          <div className="flex flew-row my-8 mx-2 p-2.5 ">
+            <Avatar className="my-2 mx-2">
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <p className="text-white sm">User</p>
+          </div>
+          <Input
+            placeholder="Search"
+            className="mx-auto my-auto w-1/2 rounded-lg shadow-lg"
+          />
         </div>
+        <Routes>
+          {sidebarItems.map((item) => (
+            <Route
+              key={item.href}
+              path={item.href}
+              element={<item.component />}
+            />
+          ))}
+          {children}
+        </Routes>
       </div>
     </div>
   );

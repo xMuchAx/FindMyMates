@@ -21,7 +21,7 @@ from rest_framework.decorators import action
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    
+
     @swagger_auto_schema(
     method='post',
     request_body=openapi.Schema(
@@ -45,11 +45,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
         if(user.check_password(request.data.get("password"))):
             token = Token.objects.get(user=user)
-            return Response({"token": token.key,"user-id": user.id, "message": "User logged in successfully"}, status=200)
+            return Response({"token": token.key,"user_id": user.id, "message": "User logged in successfully"}, status=200)
         else:
             return Response({"message": "Wrong password"}, status=401)
-        
-        
+
+
     @swagger_auto_schema(method='post', request_body=UserSerializer, responses={201: 'Created', 422: 'Unprocessable Entity'})
     @renderer_classes([JSONRenderer])
     @action(detail=False, methods=['post'])
@@ -62,11 +62,11 @@ class UserViewSet(viewsets.ModelViewSet):
             user = User.objects.create(**userdata)
             token = Token.objects.create(user=user)
 
-            return Response({"token": token.key, "user-id": user.id, "message": "User created successfully"}, status=201)
+            return Response({"token": token.key, "user_id": user.id, "message": "User created successfully"}, status=201)
         else:
             return Response(serializer.errors, status=422)
-        
-                
+
+
     @action(detail=False, methods=['put'])
     @authentication_classes([TokenAuthentication])
     def update_profile(self,request):
@@ -77,8 +77,8 @@ class UserViewSet(viewsets.ModelViewSet):
                     return Response({"message": "Profile updated successfully"}, status=200)
             else:
                 return Response({"message": "Invalid credentials"}, status=401)
-            
-    @action(detail=False, methods=['delete']) 
+
+    @action(detail=False, methods=['delete'])
     @authentication_classes([TokenAuthentication])
     def delete_user(self,request):
         if(request.user.is_authenticated):
@@ -86,5 +86,3 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"message": "Profile deleted successfully"}, status=200)
         else:
             return Response({"message": "Invalid credentials"}, status=401)
-
-      

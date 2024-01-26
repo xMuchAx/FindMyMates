@@ -10,7 +10,7 @@ export const style: any = {
 
     },
     contentDiv: {
-        marginBottom: '7rem',
+        marginBottom: '4rem',
         justifyContent: 'center',
         display: 'flex',
         flexDirection: 'column',
@@ -18,7 +18,7 @@ export const style: any = {
     },
 
     logo:{
-        width: '20rem',
+        width: '18rem',
     },
     desc:{
         color: col2,
