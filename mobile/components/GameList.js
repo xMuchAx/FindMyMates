@@ -1,44 +1,88 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, FlatList } from 'react-native';
 import { callApi } from '../apiUtils';
-// import { useNavigation } from '@react-navigation/native';
-
+import { useNavigation } from '@react-navigation/native';
 
 const GameList = () => {
   const [gameData, setGameData] = useState(null);
-//   const navigation = useNavigation();
-
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const gameData = await callApi('http://localhost:8000/event/games/', 'GET');
         console.log('Game Data:', gameData);
-        setGameData(gameData); // Mettez à jour l'état avec les données de l'événement
+        setGameData(gameData);
       } catch (error) {
-        console.error('Erreur lors de la récupération des données des jeu :', error);
+        console.error('Erreur lors de la récupération des données des jeux :', error);
       }
     };
 
-    fetchData(); // Appelez la fonction fetchData pour effectuer l'appel à l'API lorsque le composant est monté
+    fetchData();
   }, []);
 
+  function DisplayListEventByGame(nameGame) {
+    console.log("bonnnn" + nameGame);
+    navigation.navigate('EventByGame', { nameGame: nameGame });
+  }
 
   return (
-    <View>
-      <Text>Liste des jeu :</Text>
-      {gameData && gameData.map(game => (
-        <TouchableOpacity
-          key={game.id}
-        //   onPress={() => redirectDetailEvent(game.id)}
-          style={{ marginBottom: 10, padding: 10, backgroundColor: 'lightgray' }}
-        >
-          <Text>{game.name}</Text>
-          {/* Ajoutez d'autres champs d'événement selon vos besoins */}
-        </TouchableOpacity>
-      ))}
+    <View style={styles.container}>
+      <FlatList
+        style={styles.grid}
+        data={gameData}
+        numColumns={2}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.gameItem}
+            onPress={() => DisplayListEventByGame(item.name)}
+          >
+        <Image style={styles.imgGame}   source={{ uri: `../assets/${item.avatar}` }}/>
+            <Text>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    height: '100%',
+    display: "flex",
+    flexDirection: "column",
+    // borderWidth: 1.4,
+    // borderColor: '#6E4AB5',
+  },
+  grid: {
+    display: "flex",
+    width: "100%",
+    borderWidth: 1.4,
+    borderColor: 'red',
+  },
+  gameItem: {
+    width: '38%',
+    marginBottom: 10,
+    marginLeft: "8%",
+    height: 250,
+    // shadowColor: 'black', 
+    // shadowOffset: { width: 10, height: 10 }, 
+    // shadowOpacity: 1, 
+    // shadowRadius: 5, 
+    // elevation: 20
+  },
+  imgGame:{ 
+    height: "80%", 
+    width: "100%", 
+    shadowColor: 'black', 
+    shadowOffset: { width: 10, height: 10 }, 
+    shadowOpacity: 1, 
+    shadowRadius: 5, 
+    elevation: 20
+  }
+});
 
 export default GameList;

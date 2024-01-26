@@ -38,7 +38,7 @@ function App() {
       <AuthProvider>
 
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="Welcome"
         screenOptions={{
           headerShown: false,
           contentStyle: { flex: 1 },
