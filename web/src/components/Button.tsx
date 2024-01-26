@@ -1,10 +1,10 @@
-import { col1 } from '../theme/colors'
+import { theme } from '../theme/colors'
 
 const baseStyle: any = {
     fontSize: '1.4rem',
     color: '#FFF',
-    backgroundColor: col1,
-    border: `1px solid ${col1}`,
+    backgroundColor: theme,
+    border: `1px solid ${theme}`,
     borderRadius: '2rem',
     padding: '1rem 5rem',
     cursor: 'pointer',
@@ -12,13 +12,12 @@ const baseStyle: any = {
 
 interface Props {
     text: string
-    type?: 'button' | 'submit' | 'reset',
-    style?: React.CSSProperties
-    onClick?: () => void
+    onClick: () => void
+    style?: React.CSSProperties // add a property which is a CSS property
 }
 
-function Button({ text, type, style, onClick,}: Props) {
-    return <button type={type} style={{...baseStyle, ...style}} onClick={onClick}>{text}</button>
+const Button: React.FC<Props> = ({ text, onClick, style }) => {
+    return <button onClick={onClick} style={{...baseStyle, ...style}}>{text}</button>
 }
 
 export default Button
