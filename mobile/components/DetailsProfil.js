@@ -5,37 +5,36 @@ import { useAuth } from '../AuthContext';
 
 const DetailsProfil = () => {
     const { userId } = useAuth();
+    const [profilData, setProfilData] = useState(null);
 
+    useEffect(() => {
+        const fetchProfilDetails = async () => {
+            try {
+                const profilDetails = await callApi(`http://localhost:8000/user/user-detail/${userId}/`, 'GET');
+                console.log('Profil Details:', profilDetails);
+                setProfilData(profilDetails);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des détails du profil :', error);
+            }
+        };
 
-  useEffect(() => {
+        if (userId) {
+            fetchProfilDetails(); // Appelez la fonction fetchProfilDetails si userId est défini
+        }
+    }, [userId]);
 
-    const fetchProfilDetails = async () => {
-      try {
-        console.log(eventId )
-        const ProfilDetails = await callApi(`http://localhost:8000/user-detail/${userId}`, 'GET');
-        console.log('Profil Details:', ProfilDetails);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des détails de l\'événement :', error);
-      }
-    };
-
-    if (eventId) {
-      fetchProfilDetails(); // Appelez la fonction fetchProfilDetails si eventId est défini
-    }
-  }, [eventId]);
-
-  return (
-    <View>
-      <Text>Détails de l'événement :</Text>
-      {eventData && (
+    return (
         <View>
-          <Text>Title: {eventData.title}</Text>
-          <Text>Description: {eventData.description}</Text>
-          {/* Ajoutez d'autres champs d'événement selon vos besoins */}
+            <Text>Détails du profil :</Text>
+            {profilData && (
+                <View>
+                    <Text>Username: {profilData.username}</Text>
+                    <Text>Email: {profilData.email}</Text>
+                    {/* Ajoutez d'autres champs de profil selon vos besoins */}
+                </View>
+            )}
         </View>
-      )}
-    </View>
-  );
+    );
 };
 
 export default DetailsProfil;

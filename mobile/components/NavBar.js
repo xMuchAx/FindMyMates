@@ -24,7 +24,7 @@ const NavBar = ({ title }) => {
         <Image style={{height:40, width: 40}} source={require("../assets/signet.png")} />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
         <Image style={{height:40, width: 40, marginLeft:7}} source={require("../assets/signet.png")} />
       </TouchableOpacity>
     </View>

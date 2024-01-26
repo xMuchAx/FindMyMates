@@ -1,53 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import { callApi } from '../apiUtils';
 import { useRoute } from '@react-navigation/native';
 import { useAuth } from '../AuthContext';
-import { Button } from 'react-native';
-
 
 const DetailsEvent = () => {
   const [eventData, setEventData] = useState(null);
   const route = useRoute();
   const { userId } = useAuth();
-
-
+  // const { token } = useAuth();
   const eventId = route.params?.eventId;
 
-
+  // Déclarer fetchEventDetails en dehors de useEffect
+  const fetchEventDetails = async () => {
+    try {
+      const eventDetails = await callApi(`http://localhost:8000/event/event-detail/${eventId}/`, 'GET');
+      setEventData(eventDetails);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des détails de l\'événement :', error);
+    }
+  };
 
   useEffect(() => {
-
-    const fetchEventDetails = async () => {
-      try {
-        console.log(eventId )
-        const eventDetails = await callApi(`http://localhost:8000/event/event-detail/${eventId}/`, 'GET');
-        console.log('Event Details:', eventDetails);
-        setEventData(eventDetails); // Mettez à jour l'état avec les détails de l'événement
-      } catch (error) {
-        console.error('Erreur lors de la récupération des détails de l\'événement :', error);
-      }
-    };
-
     if (eventId) {
-      fetchEventDetails(); // Appelez la fonction fetchEventDetails si eventId est défini
+      // Appeler fetchEventDetails au montage du composant
+      fetchEventDetails();
     }
   }, [eventId]);
 
   const joinEvent = async (eventIdToJoin) => {
     try {
-
       const data = {
         event: eventIdToJoin,
         user: userId,
       };
 
-      console.log(data)
+      console.log(data);
 
-      
+      // Appeler l'API pour rejoindre l'événement
       const response = await callApi('http://localhost:8000/event/joined-event/', 'POST', data);
       console.log('Join Event Response:', response);
 
+      // Mettre à jour les détails de l'événement après avoir rejoint
       fetchEventDetails();
     } catch (error) {
       console.error('Erreur lors de la tentative de rejoindre l\'événement :', error);
@@ -63,7 +57,6 @@ const DetailsEvent = () => {
           <Text>Description: {eventData.description}</Text>
           <Button title="Rejoindre l'événement" onPress={() => joinEvent(eventId)} />
         </View>
-
       )}
     </View>
   );
