@@ -20,10 +20,7 @@ class Event(models.Model):
         db_table='events'
     def get_members(self):
         return EventHistory.objects.filter(event=self)
-    def get_avatar_url(self, obj):
-        if obj.avatar:
-            return self.context['request'].build_absolute_uri(obj.avatar.url)
-        return None
+   
 
 class EventHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

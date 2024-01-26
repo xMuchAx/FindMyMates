@@ -1,5 +1,5 @@
 from events.models import Event, EventHistory, EventUserFavori, Game
-from events.serializer import  EventSerializer, EventHistorySerializer, GameSerializer, EventUserFavoriSerializer
+from events.serializer import  EventSerializer, EventHistorySerializer, GameSerializer, EventUserFavoriSerializer, UserEventHistoryDetailSerializer
 from rest_framework import viewsets,  generics, status
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
@@ -7,14 +7,15 @@ from drf_yasg import openapi
 from rest_framework.renderers import JSONRenderer
 from rest_framework.decorators import renderer_classes
 from rest_framework.decorators import action
+from rest_framework.decorators import authentication_classes
+from rest_framework.permissions import IsAuthenticated
+
 
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     # permission_classes = [IsAuthenticated]
-    
-
     @swagger_auto_schema(
     method='post',
     request_body=openapi.Schema(
@@ -40,7 +41,6 @@ class EventViewSet(viewsets.ModelViewSet):
 class EventHistoryViewSet(viewsets.ModelViewSet):
     queryset = EventHistory.objects.all()
     serializer_class = EventHistorySerializer
-
 
 
     def create(self, request, *args, **kwargs):
@@ -69,15 +69,60 @@ class EventHistoryViewSet(viewsets.ModelViewSet):
             
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        
+    
+    @swagger_auto_schema(
+        method='get',
+        responses={200: EventHistorySerializer(many=True)}
+    )
+    @action(detail=False, methods=['get'])
+    def user_history(self, request, iduser=None):
+        try:
+            events = EventHistory.objects.filter(user=iduser)
+            serializer = UserEventHistoryDetailSerializer(events, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except EventHistory.DoesNotExist:
+            return Response([], status=status.HTTP_404_NOT_FOUND)
+      
+   
+    @swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['user','event'],
+        properties={
+            'user': openapi.Schema(type=openapi.TYPE_STRING),
+            'event': openapi.Schema(type=openapi.TYPE_STRING),
+        }
+    ),
+)
+    @renderer_classes([JSONRenderer])
+        
+    @action(detail=False, methods=['post'])
+    def user_event_history(self, request, *args, **kwargs):
+       try:
+          user =  request.data.get('user')
+          event =  request.data.get('event')
+          eventFound = EventHistory.objects.filter(user = user, event = event).first()
+          if eventFound:
+            serializer = UserEventHistoryDetailSerializer(eventFound, many=False)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+          else:
+            return Response([])
+
+       except Event.DoesNotExist:
+          return Response([])
+        
 
 class EventFavoriViewSet(viewsets.ModelViewSet):
     queryset = EventUserFavori.objects.all()
     serializer_class = EventUserFavoriSerializer
+    # permission_classes = [IsAuthenticated]
+
     lookup_field = 'user'
     def get_serializer_class(self):
         if self.action in  ['create', 'update']:
             return EventUserFavoriSerializer
-    # permission_classes = [IsAuthenticated]
 
 
 
