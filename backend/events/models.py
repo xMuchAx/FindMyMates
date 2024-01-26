@@ -27,6 +27,7 @@ class EventHistory(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     
+    
 
     class Meta:
         db_table='event_history'

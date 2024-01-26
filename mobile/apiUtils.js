@@ -1,10 +1,16 @@
-export async function callApi(url, method, data, options = {}) {
+export async function callApi(url, method, data, token) {
     try {
+        const headers = {
+            "Content-Type": "application/json",
+        };
+
+        if (token) {
+            headers["Authorization"] = `Bearer ${token}`;
+        }
+
         const response = await fetch(url, {
             method: method,
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: headers,
             body: JSON.stringify(data),
         });
 
@@ -15,6 +21,6 @@ export async function callApi(url, method, data, options = {}) {
     } catch (error) {
         
         console.error("Error:", error);
-        throw error; // Vous pouvez choisir de gérer l'erreur différemment si nécessaire
+        throw error;
     }
 }

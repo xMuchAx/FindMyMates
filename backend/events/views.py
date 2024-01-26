@@ -72,6 +72,8 @@ class EventHistoryViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except EventHistory.DoesNotExist:
             return Response([], status=status.HTTP_404_NOT_FOUND)
+        
+    
       
    
     @swagger_auto_schema(
@@ -101,10 +103,47 @@ class EventHistoryViewSet(viewsets.ModelViewSet):
 
        except Event.DoesNotExist:
           return Response([])
+    
+    
       
-    def delete_user_history():
-        ...
-        
+    @swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['user','event'],
+        properties={
+            'user': openapi.Schema(type=openapi.TYPE_STRING),
+            'event': openapi.Schema(type=openapi.TYPE_STRING),
+        }
+    ),
+)
+    @action(detail=False, methods=['post'])
+    def delete_user_history(self, request):
+        user = request.data.get('user')
+        event = request.data.get('event')
+
+        if not user or not event:
+            return Response({"message": "Données utilisateur ou événement manquantes"}, status=status.HTTP_400_BAD_REQUEST)
+
+        eventHistoryFound = EventHistory.objects.filter(user=user, event=event).first()
+
+        # Vérification si l'historique d'événements a été trouvé
+        if not eventHistoryFound:
+            return Response({"message": "Historique d'événements non trouvé"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Utilisation de la méthode delete() pour supprimer l'entrée de l'historique d'événements
+        eventHistoryFound.delete()
+
+        # Mise à jour du nombre de places disponibles pour l'événement
+        eventFound = Event.objects.filter(id=event).first()
+
+        # Vérification si l'événement a été trouvé
+        if eventFound:
+            eventFound.vacant_places += 1
+            eventFound.save()
+            return Response({"message": "Vous n'êtes plus membre de l'équipe"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "Événement non trouvé"}, status=status.HTTP_404_NOT_FOUND)
 
 class EventFavoriViewSet(viewsets.ModelViewSet):
     queryset = EventUserFavori.objects.all()
