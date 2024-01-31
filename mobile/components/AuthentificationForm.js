@@ -11,6 +11,7 @@ function AuthentificationForm({mode, navigation}) {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const { login } = useAuth();
+  
 
   const ClickAuth = async () => {
 

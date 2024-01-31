@@ -1,58 +1,111 @@
-import React from 'react';
-import AuthentificationForm from '../components/AuthentificationForm';
-import { StyleSheet } from 'react-native';
-import { View, TouchableOpacity, Image, Text } from 'react-native';
-
+import React, { useState } from 'react';
+import { StyleSheet, View, TouchableOpacity, Image, Text, Animated } from 'react-native';
 
 export function WelcomeScreen({ navigation }) {
-  
+  const [animatedValue] = useState(new Animated.Value(0));
+  const [isSignInClicked, setIsSignInClicked] = useState(true);
+  const [redirect, setRedirect] = useState("connexion");
+
+
+  const moveBubbleAnimation = () => {
+    Animated.timing(animatedValue, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: false,
+    }).start(() => {
+      setIsSignInClicked(false);
+      setRedirect('inscription');
+
+    });
+  };
+
+  const resetBubbleAnimation = () => {
+    Animated.timing(animatedValue, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: false,
+    }).start(() => {
+      setIsSignInClicked(true);
+      setRedirect('connexion');
+
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Image
         style={styles.imageBackground}
-        source={require("../assets/welcomeImage.jpg")} 
+        source={require("../assets/welcomeImage.jpg")}
       />
 
-        <View style={styles.containerWelcome}>
-
+      <View style={styles.containerWelcome}>
         <Text style={styles.title}>
-            Hey, <Text style={{ color: '#6E4AB5' }}>Welcome</Text> to{' '}
-            <Text style={{ color: '#6E4AB5' }}>F</Text>
-            <Text>ind</Text>
-            <Text style={{ color: '#6E4AB5' }}>M</Text>
-            <Text>y</Text>
-            <Text style={{ color: '#6E4AB5' }}>M</Text>
-            <Text>ates</Text>
-        </Text>  
+          Hey, <Text style={{ color: '#6E4AB5' }}>Welcome</Text> to{' '}
+          <Text style={{ color: '#6E4AB5' }}>F</Text>
+          <Text>ind</Text>
+          <Text style={{ color: '#6E4AB5' }}>M</Text>
+          <Text>y</Text>
+          <Text style={{ color: '#6E4AB5' }}>M</Text>
+          <Text>ates</Text>
+        </Text>
 
-        <Text style={styles.text}>Join ours community, find yours mate, join or create IRL events with people from around the world</Text>      
-
+        <Text style={styles.text}>
+          Join ours community, find yours mate, join or create IRL events with people from around the world
+        </Text>
 
         <View style={styles.containerChoiceForm}>
+          <View style={styles.containerChoice}>
+            <Animated.View
+              style={[
+                styles.bubble,
+                {
+                  transform: [
+                    {
+                      translateX: animatedValue.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['0%', '100%'],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            />
 
-            <View style={styles.containerChoice}>
-                <TouchableOpacity style={styles.btnSignIn} onPress={() => navigation.navigate('Login')} >
-                    <Text style={{color:"white", fontFamily : "Outfit Medium"}}>Sign In</Text>
-                </TouchableOpacity>
-
-
-                <TouchableOpacity style={styles.btnSignUp} onPress={() => navigation.navigate('Login')}>
-                    <Text style={{color:"#6E4AB5", fontFamily : "Outfit Medium"}}>Sign Up</Text>            
-                </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.containerRedirection}>
-
-
+            <TouchableOpacity
+              style={[ styles.btnSignIn]} onPress={() => resetBubbleAnimation()}>
+              <Text
+                style={[ styles.textSignIn,
+                  { color: isSignInClicked ? 'white' : '#6E4AB5' },
+                ]}
+              >
+                Sign In
+              </Text>
             </TouchableOpacity>
 
+            <TouchableOpacity
+              style={[
+                styles.btnSignUp              ]}
+              onPress={() => moveBubbleAnimation()}
+            >
+              <Text
+                style={[
+                  styles.textSignUp,
+                  { color: isSignInClicked ? '#6E4AB5' : 'white' },
+                ]}
+              >
+                Sign Up
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity
+            style={styles.round}
+            onPress={() =>{ if(redirect == "connexion"){navigation.navigate('Login')}else{navigation.navigate('Registration')}}}
+          >
+            <Image style={styles.arrow} source={require(`../assets/arrow.png`)} />
+          </TouchableOpacity>
         </View>
-
-
-        
-
-        </View>
-
+      </View>
     </View>
   );
 }
@@ -96,7 +149,7 @@ const styles = StyleSheet.create({
     color:"#8C8C8C"
   },
   containerChoice: {
-    borderWidth: 1,
+    borderWidth: 1.4,
     borderColor: '#6E4AB5',
     borderRadius: 50, 
     width : "77%",
@@ -107,10 +160,11 @@ const styles = StyleSheet.create({
   },
   containerChoiceForm:{
     width:"85%",
-    borderWidth: 1,
-    borderColor: 'black',
     position:"absolute",
-    bottom: 30
+    bottom: 30,
+    display:"flex",
+    flexDirection:"row",
+    alignItems:"center",
   },
   btnSignIn:{
     height:"100%",
@@ -118,8 +172,6 @@ const styles = StyleSheet.create({
     display:"flex",
     alignItems:"center",
     justifyContent:"center",
-    backgroundColor:"#6E4AB5",
-    borderRadius: 50, 
 
   },
   btnSignUp:{
@@ -128,6 +180,38 @@ const styles = StyleSheet.create({
     display:"flex",
     alignItems:"center",
     justifyContent:"center",
+  },
+  bubble:{
+    height:"100%",
+    width:"50%",
+    backgroundColor:"#6E4AB5",
+    borderRadius:50,
+    position:"absolute",
+
+  },
+  round:{
+    height: 45,
+    borderWidth: 1.4,
+    borderColor: 'black',
+    width : 45,
+    borderRadius : 50,
+    display:"flex",
+    alignItems:"center",
+    justifyContent:"center",
+    borderColor:"#6E4AB5",
+    position:"absolute",
+    right:0
+  },
+  arrow:{
+    height:20,
+    width:20,
+  },
+  textSignIn:{
+    fontFamily : "Outfit Medium"
+  },
+  textSignUp:{
+   fontFamily : "Outfit Medium"
   }
+
     
 });
