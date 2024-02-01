@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from users.models import User
 from rest_framework import viewsets
 from users.serializer import UserSerializer, UserUpdateSerializer
@@ -53,13 +53,18 @@ class UserViewSet(viewsets.ModelViewSet):
     @swagger_auto_schema(method='post', request_body=UserSerializer, responses={201: 'Created', 422: 'Unprocessable Entity'})
     @renderer_classes([JSONRenderer])
     @action(detail=False, methods=['post'])
-    def register(self,request):
+   
+    def register(self, request, *args, **kwargs):
         serializer = UserSerializer(data=request.data)
-        if(serializer.is_valid()):
+        
+        if serializer.is_valid():
+            # Hasher le mot de passe
             userdata = serializer.validated_data.copy()
             userdata["password"] = make_password(userdata["password"])
-
+            # Créer l'utilisateur avec les données traitées
             user = User.objects.create(**userdata)
+
+            # Créer le token
             token = Token.objects.create(user=user)
 
             return Response({"token": token.key, "user_id": user.id, "message": "User created successfully"}, status=201)
@@ -86,3 +91,45 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"message": "Profile deleted successfully"}, status=200)
         else:
             return Response({"message": "Invalid credentials"}, status=401)
+
+    @swagger_auto_schema(
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'user': openapi.Schema(type=openapi.TYPE_STRING),
+            'tags': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_STRING)),
+        },
+        required=['user'],
+    )
+)
+    @renderer_classes([JSONRenderer])
+    @action(detail=False, methods=['post'])
+    def add_tags(self, request):
+        user_id = request.data.get('user')
+        tags = request.data.get('tags', [])
+
+        user = get_object_or_404(User, id=user_id)
+
+        # Récupérer les tags actuels de l'utilisateur
+        current_tags = user.tags.split(',') if user.tags else []
+
+        # Ajouter les nouveaux tags à la liste existante
+        current_tags.extend(tags)
+
+        # Mettre à jour le champ tags dans la base de données
+        user.tags = ','.join(current_tags)
+        user.save()
+
+        return Response({"message": "Tags added successfully"}, status=200)
+
+    def get_tags(self, request, user):
+        user = get_object_or_404(User, id=user)
+
+        # Récupérer les tags de l'utilisateur
+        user_tags = user.tags.split(',') if user.tags else []
+
+        return Response({"tags": user_tags}, status=200)
+       
+
+
+
