@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 
 
 schema_view = get_schema_view(
-   openapi.Info(
+    openapi.Info(
         title="FindMyMates API",
         default_version='v1',
         description="Test description",
@@ -18,8 +18,10 @@ schema_view = get_schema_view(
         license=openapi.License(name="BSD License"),
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,)
+    permission_classes=(permissions.AllowAny,),
 )
+
+
 
 urlpatterns = [
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),

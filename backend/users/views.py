@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from users.models import User
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from users.serializer import UserSerializer, UserUpdateSerializer
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
@@ -13,6 +13,8 @@ from drf_yasg import openapi
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.decorators import action
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 
 # Create your views here.
@@ -44,8 +46,9 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"message": "User not found"}, status=404)
 
         if(user.check_password(request.data.get("password"))):
-            token = Token.objects.get(user=user)
-            return Response({"token": token.key,"user_id": user.id, "message": "User logged in successfully"}, status=200)
+            refresh = RefreshToken.for_user(user)
+           # token = Token.objects.get(user=user)
+            return Response({"token": str(refresh.access_token),"user_id": user.id, "message": "User logged in successfully"}, status=200)
         else:
             return Response({"message": "Wrong password"}, status=401)
 
@@ -64,10 +67,7 @@ class UserViewSet(viewsets.ModelViewSet):
             # Créer l'utilisateur avec les données traitées
             user = User.objects.create(**userdata)
 
-            # Créer le token
-            token = Token.objects.create(user=user)
-
-            return Response({"token": token.key, "user_id": user.id, "message": "User created successfully"}, status=201)
+            return Response({"user_id": user.id, "message": "User created successfully"}, status=201)
         else:
             return Response(serializer.errors, status=422)
 
@@ -110,13 +110,10 @@ class UserViewSet(viewsets.ModelViewSet):
 
         user = get_object_or_404(User, id=user_id)
 
-        # Récupérer les tags actuels de l'utilisateur
         current_tags = user.tags.split(',') if user.tags else []
 
-        # Ajouter les nouveaux tags à la liste existante
         current_tags.extend(tags)
 
-        # Mettre à jour le champ tags dans la base de données
         user.tags = ','.join(current_tags)
         user.save()
 
@@ -125,11 +122,41 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_tags(self, request, user):
         user = get_object_or_404(User, id=user)
 
-        # Récupérer les tags de l'utilisateur
         user_tags = user.tags.split(',') if user.tags else []
 
         return Response({"tags": user_tags}, status=200)
-       
+    
+    
+    @swagger_auto_schema(
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'user': openapi.Schema(type=openapi.TYPE_STRING),
+            'tag': openapi.Schema(type=openapi.TYPE_STRING),
+        },
+        required=['user'],
+    )
+)
+    @renderer_classes([JSONRenderer])
+    @action(detail=False, methods=['post'])
+    def remove_tag(request):
+        user_id = request.data.get('user')
+        tag_to_remove = request.data.get('tag')
+
+        user = get_object_or_404(User, id=user_id)
+
+        current_tags = user.tags.split(',') if user.tags else []
+
+        if tag_to_remove in current_tags:
+            current_tags.remove(tag_to_remove)
+
+            user.tags = ','.join(current_tags)
+            user.save()
+
+            return Response({"message": "Tag removed successfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Tag not found"}, status=status.HTTP_404_NOT_FOUND)
+        
 
 
 
