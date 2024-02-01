@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useState } from 'react';
+import { useState } from "react";
 
 import Register from "./views/Register";
 import Login from "./views/Login";
@@ -7,12 +7,13 @@ import Login from "./views/Login";
 import Layout from "./Layout";
 import Index from "./views/Index";
 import EventDetail from "./views/EventDetail";
-
-import { AuthContext, AuthContextType } from './AuthContext'; // Importez AuthContextType ici
+import { AuthContext, AuthContextType } from "./AuthContext";
 
 function App() {
-  const [auth, setAuth] = useState<AuthContextType['auth']>({ userId: null, token: null });
-
+  const [auth, setAuth] = useState<AuthContextType["auth"]>({
+    userId: null,
+    token: null,
+  });
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>
       <BrowserRouter>

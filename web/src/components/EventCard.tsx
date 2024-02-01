@@ -31,7 +31,7 @@ const EventCard: React.FC<EventCardProps> = ({
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate("/event-detail", { state: { title, location, imgSrc } });
+    navigate("/event-detail", { state: { title, location } });
   };
   return (
     <Card

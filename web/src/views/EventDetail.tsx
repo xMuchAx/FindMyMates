@@ -4,13 +4,14 @@ import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { Clock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { useLocation } from "react-router-dom";
 
 const EventDetail = () => {
+  const loc = useLocation();
+  const { title, location } = loc.state;
   return (
     <div className="w-sm bg-sidebar_bg mx-auto m-12 p-4 items-center p-4 shadow-lg rounded-2xl">
-      <h1 className="text-2xl font-bold mb-4">
-        Event Details: SSL 2024 Smash Bros.
-      </h1>
+      <h1 className="text-2xl font-bold mb-4">{title}</h1>
       <p className="text-gray-600 mb-4">
         Amateur competition limited to 200 participants. Arcade screen provided.
       </p>
@@ -21,7 +22,7 @@ const EventDetail = () => {
           </div>
           <span className="text-gray-600">Participants</span>
         </div>
-        <Progress value={63} color="blue" className="mb-4" />
+        <Progress value={48} color="blue" className="mb-4" />
         <div className="flex items-center mb-4">
           <FaCalendarAlt className="text-gray-600 mr-2" />
           <span className="text-gray-600">Date</span>
@@ -29,12 +30,11 @@ const EventDetail = () => {
         <p className="text-gray-600 mb-4">Tuesday, February 9, 2024</p>
         <div className="flex items-center mb-4">
           <Clock className="text-gray-600 mr-2" />
-          <span className="text-gray-600">Time</span>
+          <p className="text-gray-600 mb-4">4:00 PM - 9:00 PM</p>
         </div>
-        <p className="text-gray-600 mb-4">4:00 PM - 9:00 PM</p>
         <div className="flex items-center mb-4">
           <FaMapMarkerAlt className="text-gray-600 mr-2" />
-          <span className="text-gray-600">Location</span>
+          <span className="text-gray-600">{location}</span>
         </div>
         <p className="text-gray-600 mb-4">
           14 place des colonnes, Cergy | Axe Majeur Batiment 14

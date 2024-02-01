@@ -8,6 +8,7 @@ import { Save } from "lucide-react";
 import Profile from "./views/Profile";
 import logo from "./assets/logo.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "./components/ui/avatar";
+import AddEvent from "./views/AddEvent";
 
 const sidebarItems = [
   {
@@ -21,9 +22,9 @@ const sidebarItems = [
     component: Game, // change this to Game when ready
   },
   {
-    title: "Save",
+    title: "My events",
     href: "/save",
-    component: Save,
+    component: AddEvent,
   },
   {
     title: "Profile",
@@ -39,12 +40,12 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="w-full h-full flex">
-      <div className="h-full bg-sidebar_bg drop-shadow-xl">
+      <div className="h-full bg-sidebar_bg drop-shadow-xl fixed">
         <img src={logo} alt="logo" className="w-64 h-64 mx-30" />
         <Sidebar items={sidebarItems} />
       </div>
-      <div className="flex-1 flex flex-col space-y-4">
-        <div className="h-1/4 bg-theme flex justify-between ">
+      <div className="flex-1 flex flex-col space-y-4 overflow-auto ml-[350px]">
+        <div className="h-1/4 bg-theme flex justify-between sticky top-0 z-10">
           <div className="flex flew-row my-8 mx-2 p-2.5 ">
             <Avatar className="my-2 mx-2">
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />

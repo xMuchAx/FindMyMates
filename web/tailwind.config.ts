@@ -21,6 +21,9 @@ const config = {
       },
     },
     extend: {
+      gridTemplateColumns: {
+        layout: "240px 1fr",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -64,6 +67,9 @@ const config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      margin: {
+        "5px": "5px",
       },
       keyframes: {
         "accordion-down": {
