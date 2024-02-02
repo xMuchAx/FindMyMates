@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404, render
 from users.models import User
+from events.models import Event
 from rest_framework import viewsets, status
 from users.serializer import UserSerializer, UserUpdateSerializer
+from events.serializer import EventSerializer
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
 from rest_framework.authtoken.models import Token
@@ -14,6 +16,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.decorators import action
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.db.models import Q
+
 
 
 
@@ -156,6 +160,41 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"message": "Tag removed successfully"}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Tag not found"}, status=status.HTTP_404_NOT_FOUND)
+     
+    @action(detail=False, methods=['get'])
+    def user_recommendation(self, request,user):
+        userFound = get_object_or_404(User, id=user)
+        if userFound.tags is None or not userFound.tags:
+           return Response([])
+
+        current_tags = userFound.tags.split(',')
+        query_all_conditions = Q()
+        query_game_location = Q()
+        query_game_any_location = Q()
+        query_location = Q()
+        for tag in current_tags :
+            query_all_conditions &= (Q(game=tag) | Q(location=tag))
+            query_game_location |= (Q(game=tag) | Q(location=tag))
+            query_game_any_location |= Q(game=tag)
+            query_location |= (Q(location=tag))
+
+        queryset_all_conditions = Event.objects.filter(query_all_conditions)
+        queryset_game_location = Event.objects.filter(query_game_location | query_game_any_location)
+        queryset_location = Event.objects.filter(query_location)
+
+        result_all_conditions = EventSerializer(queryset_all_conditions, many=True).data
+        result_game_location = EventSerializer(queryset_game_location, many=True).data
+        result_location = EventSerializer(queryset_location, many=True).data
+
+        response_data = {
+            "result_all_conditions": result_all_conditions,
+            "result_game_location": result_game_location,
+            "result_location": result_location,
+        }
+
+        return Response(response_data)
+
+        
         
 
 

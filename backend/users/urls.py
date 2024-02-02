@@ -11,7 +11,10 @@ urlpatterns = [
     path('user-detail/<str:pk>/', views.UserViewSet.as_view({'get': 'retrieve'}), name='event-detail'), 
     path('add-tags/', views.UserViewSet.as_view({'post': 'add_tags'}), name='add_tags'), 
     path('list-tag/<str:user>/', views.UserViewSet.as_view({'get': 'get_tags'}), name='list'), 
-    path('deleted-tag/', views.UserViewSet.as_view({'post': 'remove_tag'}), name='deleted_tag'), 
+   # path('deleted-tag/', views.UserViewSet.as_view({'post': 'remove_tag'}), name='deleted_tag'), 
+    path('recommendation/<str:user>/', views.UserViewSet.as_view({'get': 'user_recommendation'}), name='recommendation'), 
+
+    
 
 
 ]
