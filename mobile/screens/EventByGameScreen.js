@@ -24,7 +24,7 @@ export function EventByGameScreen() {
   return (
     <View style={{ flex: 1 }}>
       <EventList nameGame={nameGame}/>
-      <NavBar />
+      <NavBar bubblePositionInit={1} route="Game"/>
     </View>
   );
 }

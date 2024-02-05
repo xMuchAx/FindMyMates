@@ -6,7 +6,7 @@ import EventList from '../components/EventList';
 import { View, Text } from 'react-native';
 import GameListHorizontal from '../components/GameListHorizontal';
 
-export function HomeScreen() {
+export function HomeScreen(token, id_user, seeText) {
   const navigation = useNavigation();
   const { isLoggedIn } = useAuth();
 
@@ -21,10 +21,10 @@ export function HomeScreen() {
     }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex:1, overflow:"hidden" }}>
       <GameListHorizontal/>
       <EventList />
-      <NavBar />
+      <NavBar bubblePositionInit={0} route="Home"/>
     </View>
   );
 }

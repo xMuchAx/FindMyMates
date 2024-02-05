@@ -24,30 +24,33 @@ const NavBar = ({ bubblePositionInit, route }) => {
       }else if(route=="Profil"){
         setAreTextsVisibleProfil(false)
       }
-      Animated.spring(bubblePosition, {
-        toValue: index,
-        useNativeDriver: false,
-        speed: 25, // Ajustez cette valeur selon votre préférence, par exemple, 2 pour doubler la vitesse
+    Animated.spring(bubblePosition, {
+      toValue: index,
+      useNativeDriver: false,
+    }).start(({ finished }) => {
+      // Check if the animation finished successfully
+      if (finished) {
+        // Navigate to the selected screen
+          setHomeClicked(false);
+          setGameClicked(false);
+          setEventClicked(false);
+          setProfilClicked(false);
 
-      }).start(() => {
-        setHomeClicked(false);
-        setGameClicked(false);
-        setEventClicked(false);
-        setProfilClicked(false);
-      
-        if (route === "Home") {
-          setAreTextsVisibleHome(true);
-        } else if (route === "Game") {
-          setAreTextsVisibleGame(true);
-        } else if (route === "Profil") {
-          setAreTextsVisibleProfil(true);
+        if(route=="Home"){
+          setAreTextsVisibleHome(true)
+
+        }else if(route=="Game"){
+          setAreTextsVisibleGame(true)
+
+        }else if(route=="Profil"){
+          setAreTextsVisibleProfil(true)
         }
-      
+
         bubblePosition.setValue(bubblePositionInit);
         navigation.navigate(screenName);
-      });
-    }      
-
+      }
+    });
+  };
 
   return (
     <View style={styles.navBar}>

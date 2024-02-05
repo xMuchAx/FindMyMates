@@ -21,7 +21,7 @@ export function GameScreen() {
   return (
     <View style={{ flex: 1 }}>
       <GameList />
-      <NavBar />
+      <NavBar bubblePositionInit={1} route="Game" />
     </View>
   );
 }
