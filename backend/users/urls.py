@@ -3,14 +3,18 @@ from . import views
 
 
 urlpatterns = [
-    # path('login/', views.login.login, name='login'),
-    # path('register/', views.register.register, name='register'),
-    # path('update/', views.update.update_profile, name='update_profile'),
-    # path('delete/', views.delete.delete_user, name='delete_user'),
+    
     path('login/', views.UserViewSet.as_view({'post': 'login'}), name='login'), 
     path('register/', views.UserViewSet.as_view({'post': 'register'}), name='register'), 
     path('update/', views.UserViewSet.as_view({'put': 'update_profile'}), name='update_profile'), 
     path('user-delete/', views.UserViewSet.as_view({'delete': 'delete_user'}), name='delete'), 
     path('user-detail/<str:pk>/', views.UserViewSet.as_view({'get': 'retrieve'}), name='event-detail'), 
+    path('add-tags/', views.UserViewSet.as_view({'post': 'add_tags'}), name='add_tags'), 
+    path('list-tag/<str:user>/', views.UserViewSet.as_view({'get': 'get_tags'}), name='list'), 
+   # path('deleted-tag/', views.UserViewSet.as_view({'post': 'remove_tag'}), name='deleted_tag'), 
+    path('recommendation/<str:user>/', views.UserViewSet.as_view({'get': 'user_recommendation'}), name='recommendation'), 
+
+    
+
 
 ]

@@ -9,17 +9,18 @@ from rest_framework.decorators import renderer_classes
 from rest_framework.decorators import action
 from rest_framework.decorators import authentication_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
+
 
 
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     @swagger_auto_schema(
     method='get',
-    responses={200: EventSerializer(many=True)}
-)
+    responses={200: EventSerializer(many=True)},)
     @renderer_classes([JSONRenderer])
     @action(detail=False, methods=['get'])
     def search_event(self, request, game=None):
@@ -30,7 +31,7 @@ class EventViewSet(viewsets.ModelViewSet):
 class EventHistoryViewSet(viewsets.ModelViewSet):
     queryset = EventHistory.objects.all()
     serializer_class = EventHistorySerializer
-
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -72,10 +73,7 @@ class EventHistoryViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except EventHistory.DoesNotExist:
             return Response([], status=status.HTTP_404_NOT_FOUND)
-        
-    
-      
-   
+
     @swagger_auto_schema(
     method='post',
     request_body=openapi.Schema(
@@ -103,9 +101,7 @@ class EventHistoryViewSet(viewsets.ModelViewSet):
 
        except Event.DoesNotExist:
           return Response([])
-    
-    
-      
+       
     @swagger_auto_schema(
     method='post',
     request_body=openapi.Schema(
@@ -144,17 +140,17 @@ class EventHistoryViewSet(viewsets.ModelViewSet):
             return Response({"message": "Vous n'êtes plus membre de l'équipe"}, status=status.HTTP_200_OK)
         else:
             return Response({"message": "Événement non trouvé"}, status=status.HTTP_404_NOT_FOUND)
+        
 
 class EventFavoriViewSet(viewsets.ModelViewSet):
     queryset = EventUserFavori.objects.all()
     serializer_class = EventUserFavoriSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     lookup_field = 'user'
     def get_serializer_class(self):
         if self.action in  ['create', 'update']:
             return EventUserFavoriSerializer
-
 
 
     def create(self, request, *args, **kwargs):
@@ -194,13 +190,13 @@ class EventFavoriViewSet(viewsets.ModelViewSet):
           return Response(serializer.data)
        except Event.DoesNotExist:
           return Response([])
-      
-    
+       
 
 class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+    
 
     
 

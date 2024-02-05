@@ -4,5 +4,6 @@ djangorestframework
 mysqlclient
 pillow
 drf-yasg
-drf-yasg
 django-filter==23.2
+djangorestframework-simplejwt
+
