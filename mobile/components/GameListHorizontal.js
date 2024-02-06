@@ -3,15 +3,17 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView } from 'rea
 import { callApi } from '../apiUtils';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useAuth } from '../AuthContext';
 
 const GameListHorizontal = () => {
   const [gameData, setGameData] = useState(null);
   const navigation = useNavigation();
+  const { token } = useAuth()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const gameData = await callApi('http://localhost:8000/event/games/', 'GET');
+        const gameData = await callApi('http://localhost:8000/event/games/', 'GET', null, token);
         console.log('Game Data:', gameData);
         setGameData(gameData);
       } catch (error) {

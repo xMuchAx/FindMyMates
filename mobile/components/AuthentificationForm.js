@@ -32,7 +32,7 @@ function AuthentificationForm({mode, navigation}) {
         if (token) {
           login(token, id_user);
 
-          navigation.navigate('Home', { token, id_user });
+          navigation.navigate('Home');
         }
 
       } catch (error) {
