@@ -5,12 +5,12 @@ import { useAuth } from '../AuthContext';
 import EventList from '../components/EventList';
 import { View, Text } from 'react-native';
 import GameListHorizontal from '../components/GameListHorizontal';
+import EventRecommendation from '../components/EventRecommendation';
 
 export function HomeScreen() {
   const navigation = useNavigation();
   const { isLoggedIn } = useAuth();
-
-  
+  const { token } = useAuth();
 
   const userIsLoggedIn = isLoggedIn();
 
@@ -21,10 +21,11 @@ export function HomeScreen() {
     }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex:1, overflow:"hidden" }}>
       <GameListHorizontal/>
-      <EventList />
-      <NavBar />
+      <EventList/>
+      <EventRecommendation/>
+      <NavBar bubblePositionInit={0} route="Home"/>
     </View>
   );
 }

@@ -22,7 +22,7 @@ export function ProfilScreen() {
   return (
     <View style={{ flex: 1 }}>
       <DetailsProfil/>
-      <NavBar />
+      <NavBar bubblePositionInit={3} route="Profil" />
     </View>
   );
 }
