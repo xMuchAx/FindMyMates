@@ -20,7 +20,8 @@ urlpatterns = [
     path('add-favorite/', EventFavoriViewSet.as_view({'post': 'create'}), name='add-favorite'),
     path('game_created/', GameViewSet.as_view({'post': 'create'}), name='create_game'),
     path('games/', GameViewSet.as_view({'get': 'list'}), name='list-game'),
-    
+    path('search-event_by-host/<str:host>/', EventViewSet.as_view({'get': 'search_event_by_host'}), name='host-event'),
+
 
 
  

@@ -27,6 +27,16 @@ class EventViewSet(viewsets.ModelViewSet):
         events = Event.objects.filter(game=game)
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
+    
+    @swagger_auto_schema(
+    method='get',
+    responses={200: EventSerializer(many=True)},)
+    @renderer_classes([JSONRenderer])
+    @action(detail=False, methods=['get'])
+    def search_event_by_host(self, request, host):
+        events = Event.objects.filter(host=host)
+        serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)
 
 class EventHistoryViewSet(viewsets.ModelViewSet):
     queryset = EventHistory.objects.all()
