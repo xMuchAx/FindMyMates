@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, FlatList } from 'react-native';
 import { callApi } from '../apiUtils';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../AuthContext';
 
 const GameList = () => {
   const [gameData, setGameData] = useState(null);
   const navigation = useNavigation();
+  const {token} = useAuth()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const gameData = await callApi('http://localhost:8000/event/games/', 'GET');
+        const gameData = await callApi('http://localhost:8000/event/games/', 'GET', null, token);
         console.log('Game Data:', gameData);
         setGameData(gameData);
       } catch (error) {
@@ -21,8 +23,8 @@ const GameList = () => {
     fetchData();
   }, []);
 
-  function DisplayListEventByGame(nameGame) {
-    navigation.navigate('EventByGame', { nameGame: nameGame });
+  function DisplayListEventByGame(nameGame, imageGame, event_number) {
+    navigation.navigate('EventByGame', { nameGame: nameGame, imageGame : imageGame, event_number : event_number });
   }
 
   return (
@@ -35,9 +37,9 @@ const GameList = () => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.gameItem}
-            onPress={() => DisplayListEventByGame(item.name)}
+            onPress={() => DisplayListEventByGame(item.name, item.avatar, item.event_number)}
           >
-        <Image style={styles.imgGame}   source={{ uri: `../assets/${item.avatar}` }}/>
+              <Image style={styles.imgGame} source={require(`../assets/${item.avatar}`)} />
             <Text>{item.name}</Text>
           </TouchableOpacity>
         )}

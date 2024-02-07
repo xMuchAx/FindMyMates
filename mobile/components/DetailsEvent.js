@@ -3,17 +3,20 @@ import { View, Text, Button } from 'react-native';
 import { callApi } from '../apiUtils';
 import { useRoute } from '@react-navigation/native';
 import { useAuth } from '../AuthContext';
+import NavBar from './NavBar';
 
 const DetailsEvent = () => {
   const [eventData, setEventData] = useState(null);
   const [isJoined, setIsJoined] = useState(false); // Mise à jour du nom de la variable
   const route = useRoute();
   const { userId } = useAuth();
+  const { token } = useAuth();
+
   const eventId = route.params?.eventId;
 
   async function displayEventDetails() {
     try {
-      const eventDetails = await callApi(`http://localhost:8000/event/event-detail/${eventId}/`, 'GET');
+      const eventDetails = await callApi(`http://localhost:8000/event/event-detail/${eventId}/`, 'GET', null, token);
       setEventData(eventDetails);
     } catch (error) {
       console.error('Erreur lors de la récupération des détails de l\'événement :', error);
@@ -27,7 +30,7 @@ const DetailsEvent = () => {
         user: userId
       };
   
-      const result = await callApi(`http://localhost:8000/event/history/`, 'POST', data); 
+      const result = await callApi(`http://localhost:8000/event/history/`, 'POST', data, token); 
 
       if(result.length != 0){
         setIsJoined(true);
@@ -61,7 +64,7 @@ const DetailsEvent = () => {
       console.log(data);
 
       // Appeler l'API pour rejoindre l'événement
-      const response = await callApi('http://localhost:8000/event/joined-event/', 'POST', data);
+      const response = await callApi('http://localhost:8000/event/joined-event/', 'POST', data, token);
       console.log('Join Event Response:', response);
 
       // Mettre à jour les détails de l'événement après avoir rejoint
@@ -83,7 +86,7 @@ const DetailsEvent = () => {
       console.log(data);
 
       // Appeler l'API pour rejoindre l'événement
-      const response = await callApi('http://localhost:8000/event/delete-user-history', 'POST', data);
+      const response = await callApi('http://localhost:8000/event/delete-user-history', 'POST', data, token);
       console.log('Join Event Response:', response);
 
       // Mettre à jour les détails de l'événement après avoir rejoint
@@ -109,6 +112,8 @@ const DetailsEvent = () => {
           )}
         </View>
       )}
+      
+
     </View>
   );
 };

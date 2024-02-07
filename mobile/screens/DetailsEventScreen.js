@@ -8,8 +8,8 @@ export function DetailsEventScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-        <DetailsEvent/>
-        <NavBar/>
+      <DetailsEvent/>
+      <NavBar bubblePositionInit={0} route="Home"/>
     </View>
   );
 }
