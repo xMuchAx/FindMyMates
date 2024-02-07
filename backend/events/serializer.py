@@ -24,7 +24,10 @@ class EventSerializer(serializers.ModelSerializer):
             {'user': member['user']} for member in event_members
         ]
         return representation
-    
+class  EventCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        exclude = ['duration']
     
         
 
