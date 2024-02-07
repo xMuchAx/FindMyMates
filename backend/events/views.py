@@ -10,6 +10,8 @@ from rest_framework.decorators import action
 from rest_framework.decorators import authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import permissions
+from datetime import datetime
+
 
 
 
@@ -17,7 +19,7 @@ from rest_framework import permissions
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     @swagger_auto_schema(
     method='get',
     responses={200: EventSerializer(many=True)},)
@@ -37,6 +39,27 @@ class EventViewSet(viewsets.ModelViewSet):
         events = Event.objects.filter(host=host)
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
+    
+    def on_going_event(self, request, host):
+        events = Event.objects.filter(host=host)
+        serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)
+    
+    # def get_events_in_progress():
+    #     current_time = datetime.now()
+
+    #     events_in_progress = []
+    #     events = Event.objects.get()
+        
+
+    #     for event in events:
+    #         start_time = datetime.strptime(event['date_start'], "%Y-%m-%d %H:%M:%S")
+    #         end_time = datetime.strptime(event['date_end'], "%Y-%m-%d %H:%M:%S")
+
+    #         if start_time <= current_time <= end_time:
+    #             events_in_progress.append(event)
+
+    #     return events_in_progress
 
 class EventHistoryViewSet(viewsets.ModelViewSet):
     queryset = EventHistory.objects.all()
@@ -168,7 +191,6 @@ class EventFavoriViewSet(viewsets.ModelViewSet):
         user_id = request.data.get('user')
         event_id = request.data.get('event')
 
-        # Vérifiez si l'utilisateur est déjà membre de cet événement
         existing_membership = EventUserFavori.objects.filter(user=user_id, event=event_id).first()
 
         if existing_membership:

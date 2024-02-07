@@ -169,7 +169,7 @@ class UserViewSet(viewsets.ModelViewSet):
         query_game_any_location = Q()
         query_location = Q()
         for tag in current_tags :
-            query_all_conditions &= (Q(game=tag) | Q(location=tag))
+            query_all_conditions &= (Q(game=tag) | Q(location__iexact='HOME'))
             query_game_location |= (Q(game=tag) | Q(location=tag))
             query_game_any_location |= Q(game=tag)
             query_location |= (Q(location=tag))
