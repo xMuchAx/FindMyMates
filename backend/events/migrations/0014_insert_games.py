@@ -12,7 +12,7 @@ def insert_default_games(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('events', '0012_alter_event_avatar'),
+        ('events', '0013_rename_avatar_game_url_remove_game_event_number'),
     ]
 
     operations = [
