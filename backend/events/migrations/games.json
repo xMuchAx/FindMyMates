@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Fortnite",
+        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmG_ecG8PRn8xtniWbiIuNbnzSZ3i28a6Fkw&usqp=CAU"
+    },
+    {
+        "name": "Minecraft",
+        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOuKdAxqMn0XlXFUy0pqQb-n7T_MvzHckg3w&usqp=CAU"
+    },
+    {
+        "name": "Grand Theft Auto V",
+        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc8DWnKndLSiBsNy2n4xxvyZVjpfS8L5AlwA&usqp=CAU"
+    },
+    {
+        "name": "Among Us",
+        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYZPWZOu-c13cHDqO2ClTN7oHdgP0meEE5TQ&usqp=CAU"
+    },
+    {
+        "name": "Apex Legends",
+        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwM9K8BPIKkTlTkXf6exzhAo9gtcwwi4KdxQ&usqp=CAU"
+    },
+    {
+        "name": "Overwatch",
+        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAL_mZw34xBJ8YqgoFFBfV0OJUTxGeoqO_DQ&usqp=CAU"
+    },
+    {
+        "name": "Warzone",
+        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs_RqqEPKgSyzGLIFkzv7YJFsPM_RQcGk5nQ&usqp=CAU"
+    },
+    {
+        "name": "Rocket League",
+        "url": "https://i.ytimg.com/vi/6av942s23CM/hqdefault.jpg"
+    },
+    {
+        "name": "NBA 2K24",
+        "url": "https://campus-des-ecoles.fr/uploads/2023/07/NBA_2k24.png"
+    },
+    {
+        "name": "EA Sports FC 24",
+        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaQENHf1u3_0ALsyhakw3ODTs88Ns8WMKu505wR1Mmp9JWanDl85kN7uCTVyXFEgoq1AI&usqp=CAU"
+    },
+    {
+        "name": "Clash Royale",
+        "url": "https://i.ytimg.com/vi/HAB6OPF9EhQ/maxresdefault.jpg"
+    },
+    {
+        "name": "Brawl Stars",
+        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnTpMRMRYMrWeYY65_BSv2R5-52A__u2PztA&usqp=CAU"
+    }
+]
