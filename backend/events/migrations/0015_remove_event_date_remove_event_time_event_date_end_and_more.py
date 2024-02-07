@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('events', '0014_insert_games'),
+        ('events', '0013_rename_avatar_game_url_remove_game_event_number'),
     ]
 
     operations = [

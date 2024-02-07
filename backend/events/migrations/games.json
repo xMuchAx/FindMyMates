@@ -1,31 +1,31 @@
 [
     {
         "name": "Fortnite",
-        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmG_ecG8PRn8xtniWbiIuNbnzSZ3i28a6Fkw&usqp=CAU"
+        "url": "fortnite.png"
     },
     {
         "name": "Minecraft",
-        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOuKdAxqMn0XlXFUy0pqQb-n7T_MvzHckg3w&usqp=CAU"
+        "url": "minecraft.png"
     },
     {
         "name": "Grand Theft Auto V",
-        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc8DWnKndLSiBsNy2n4xxvyZVjpfS8L5AlwA&usqp=CAU"
+        "url": "gta.png"
     },
     {
         "name": "Among Us",
-        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYZPWZOu-c13cHDqO2ClTN7oHdgP0meEE5TQ&usqp=CAU"
+        "url": "amongus.png"
     },
     {
         "name": "Apex Legends",
-        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwM9K8BPIKkTlTkXf6exzhAo9gtcwwi4KdxQ&usqp=CAU"
+        "url": "apex.png"
     },
     {
         "name": "Overwatch",
-        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAL_mZw34xBJ8YqgoFFBfV0OJUTxGeoqO_DQ&usqp=CAU"
+        "url": "overwatch.png"
     },
     {
         "name": "Warzone",
-        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs_RqqEPKgSyzGLIFkzv7YJFsPM_RQcGk5nQ&usqp=CAU"
+        "url": "warzone.png"
     },
     {
         "name": "Rocket League",
@@ -33,18 +33,30 @@
     },
     {
         "name": "NBA 2K24",
-        "url": "https://campus-des-ecoles.fr/uploads/2023/07/NBA_2k24.png"
+        "url": "nba.png"
     },
     {
         "name": "EA Sports FC 24",
-        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaQENHf1u3_0ALsyhakw3ODTs88Ns8WMKu505wR1Mmp9JWanDl85kN7uCTVyXFEgoq1AI&usqp=CAU"
+        "url": "fifa.png"
     },
     {
         "name": "Clash Royale",
-        "url": "https://i.ytimg.com/vi/HAB6OPF9EhQ/maxresdefault.jpg"
+        "url": "clashRoyale.png"
     },
     {
-        "name": "Brawl Stars",
-        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnTpMRMRYMrWeYY65_BSv2R5-52A__u2PztA&usqp=CAU"
+        "name": "Mario Kart 8",
+        "url": "MarioKart.png"
+    },
+    {
+        "name": "Rocket League",
+        "url": "rocketleague.png"
+    },
+    {
+        "name": "Valorant",
+        "url": "valorant.png"
+    },
+    {
+        "name": "Fall Guy",
+        "url": "fallguy.png"
     }
 ]
