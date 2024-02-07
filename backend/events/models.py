@@ -1,9 +1,8 @@
-import uuid
 from users.models import User
 from django.db import models
+import uuid
 
 class Event(models.Model):
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     host = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=32)
@@ -31,8 +30,6 @@ class EventHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    
-    
 
     class Meta:
         db_table='event_history'
@@ -41,17 +38,14 @@ class EventUserFavori(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    
 
     class Meta:
         db_table='favoris'
-        
-        
 
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=32)
-    event_number = models.IntegerField()
-    avatar = models.CharField(max_length=500)
+    url = models.CharField(max_length=500)
+
     class Meta:
         db_table='game'
