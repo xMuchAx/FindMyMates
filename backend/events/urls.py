@@ -15,12 +15,16 @@ urlpatterns = [
     path('event-history/list/<str:iduser>/', EventHistoryViewSet.as_view({'get': 'user_history'}), name='user-history'),
     path('history/', EventHistoryViewSet.as_view({'post': 'user_event_history'}), name='event-user-history'),
     path('search-event_by-game/<str:game>/', EventViewSet.as_view({'get': 'search_event'}), name='search-event'),
+    path('event_in_progress/', EventViewSet.as_view({'get': 'get_events_in_progress'}), name='event_in_progress'),
+
+    path('search-event_by-name/<str:name>/', EventViewSet.as_view({'get': 'search_event_by_name'}), name='search-event-by-name'),
     path('delete-user-history', EventHistoryViewSet.as_view({'post': 'delete_user_history'}), name='delete_user_history'),
     path('favorites/', EventFavoriViewSet.as_view({'post': 'event_favorites',}), name='event-favoris-detail'),
     path('add-favorite/', EventFavoriViewSet.as_view({'post': 'create'}), name='add-favorite'),
     path('game_created/', GameViewSet.as_view({'post': 'create'}), name='create_game'),
     path('games/', GameViewSet.as_view({'get': 'list'}), name='list-game'),
-    
+    path('search-event_by-host/<str:host>/', EventViewSet.as_view({'get': 'search_event_by_host'}), name='host-event'),
+
 
 
  

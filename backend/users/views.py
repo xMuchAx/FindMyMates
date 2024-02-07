@@ -18,11 +18,6 @@ from rest_framework.decorators import action
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.db.models import Q
 
-
-
-
-# Create your views here.
-
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -40,7 +35,6 @@ class UserViewSet(viewsets.ModelViewSet):
     ),
     responses={200: 'User logged in successfully', 401: 'Wrong password', 404: 'User not found'}
 )
-
     @renderer_classes([JSONRenderer])
     @action(detail=False, methods=['post'])
     def login(self,request):
@@ -103,7 +97,7 @@ class UserViewSet(viewsets.ModelViewSet):
             'user': openapi.Schema(type=openapi.TYPE_STRING),
             'tags': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_STRING)),
         },
-        required=['user'],
+        required=['user','tags'],
     )
 )
     @renderer_classes([JSONRenderer])
@@ -160,6 +154,8 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"message": "Tag removed successfully"}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Tag not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        
      
     @action(detail=False, methods=['get'])
     def user_recommendation(self, request,user):
@@ -173,7 +169,7 @@ class UserViewSet(viewsets.ModelViewSet):
         query_game_any_location = Q()
         query_location = Q()
         for tag in current_tags :
-            query_all_conditions &= (Q(game=tag) | Q(location=tag))
+            query_all_conditions &= (Q(game=tag) | Q(location__iexact='HOME'))
             query_game_location |= (Q(game=tag) | Q(location=tag))
             query_game_any_location |= Q(game=tag)
             query_location |= (Q(location=tag))
