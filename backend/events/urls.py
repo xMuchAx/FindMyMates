@@ -17,7 +17,7 @@ urlpatterns = [
     path('search-event_by-game/<str:game>/', EventViewSet.as_view({'get': 'search_event'}), name='search-event'),
     path('event_in_progress/', EventViewSet.as_view({'get': 'get_events_in_progress'}), name='event_in_progress'),
 
-    path('search-event_by-name/<str:name>/', EventViewSet.as_view({'get': 'search_event_by_name'}), name='search-event-by-name'),
+    path('search-event_by_name/<str:name>/', EventViewSet.as_view({'get': 'search_event_by_name'}), name='search-event-by-name'),
     path('delete-user-history', EventHistoryViewSet.as_view({'post': 'delete_user_history'}), name='delete_user_history'),
     path('favorites/', EventFavoriViewSet.as_view({'post': 'event_favorites',}), name='event-favoris-detail'),
     path('add-favorite/', EventFavoriViewSet.as_view({'post': 'create'}), name='add-favorite'),

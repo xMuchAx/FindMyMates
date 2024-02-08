@@ -20,7 +20,7 @@ class EventViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return EventCreateSerializer
         return EventSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(
     method='get',
