@@ -21,9 +21,8 @@ from django.db.models import Q
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.action == ['create']:
             return UserCreateSerializer
         return UserSerializer
 
@@ -73,16 +72,41 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=422)
 
 
+    # @action(detail=False, methods=['put'])
+    # @authentication_classes([TokenAuthentication])
+    # def update_profile(self,request):
+    #         if(request.user.is_authenticated):
+    #             serializer = UserUpdateSerializer(request.user, data=request.data, partial=True)
+    #             if(serializer.is_valid()):
+    #                 serializer.save()
+    #                 return Response({"message": "Profile updated successfully"}, status=200)
+    #         else:
+    #             return Response({"message": "Invalid credentials"}, status=401)
+    
+    @swagger_auto_schema(
+    method='put',  
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'user': openapi.Schema(type=openapi.TYPE_STRING),  
+            'username': openapi.Schema(type=openapi.TYPE_STRING),  
+            'password': openapi.Schema(type=openapi.TYPE_STRING),
+            'bio': openapi.Schema(type=openapi.TYPE_STRING),
+        },  required=['user'], 
+    ))
     @action(detail=False, methods=['put'])
-    @authentication_classes([TokenAuthentication])
-    def update_profile(self,request):
-            if(request.user.is_authenticated):
-                serializer = UserUpdateSerializer(request.user, data=request.data, partial=True)
-                if(serializer.is_valid()):
-                    serializer.save()
-                    return Response({"message": "Profile updated successfully"}, status=200)
-            else:
-                return Response({"message": "Invalid credentials"}, status=401)
+    def update_profile(self, request):
+        data = request.data
+        user = get_object_or_404(User, id=data['user'])
+        if 'username' in data:
+            user.username = data['username']
+        if 'password' in data:
+            user.password =  make_password(data["password"])
+        if 'bio' in data:
+            user.bio = data['bio']
+        user.save()
+        return Response("Profile updated successfully", status=status.HTTP_200_OK)
+ 
 
     @action(detail=False, methods=['delete'])
     @authentication_classes([TokenAuthentication])
@@ -172,7 +196,8 @@ class UserViewSet(viewsets.ModelViewSet):
         query_game_any_location = Q()
         query_location = Q()
         for tag in current_tags :
-            query_all_conditions &= (Q(game=tag) | Q(location__iexact='HOME') | Q(location=tag))
+            query_all_conditions &= Q(game=tag, location__iexact='HOME') | Q(game=tag, location=tag)
+
             query_game_location |= (Q(game=tag) | Q(location=tag))
             query_game_any_location |= Q(game=tag)
             query_location |= (Q(location=tag))
