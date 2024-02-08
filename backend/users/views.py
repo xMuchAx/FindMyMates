@@ -164,7 +164,7 @@ class UserViewSet(viewsets.ModelViewSet):
 )
     @renderer_classes([JSONRenderer])
     @action(detail=False, methods=['post'])
-    def remove_tag(request):
+    def remove_tag(self,request):
         user_id = request.data.get('user')
         tag_to_remove = request.data.get('tag')
 

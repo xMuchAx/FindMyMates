@@ -30,12 +30,9 @@ class  EventCreateSerializer(serializers.ModelSerializer):
         model = Event
         exclude = ['duration', 'vacant_places']
     def create(self, validated_data):
-        maximum_place = validated_data.get('maximum_place')
-            
-        vacant_places = maximum_place  
-            
-        validated_data.pop('vacant_places', None)
-            
+        maximum_place = validated_data.get('maximum_place')    
+        vacant_places = maximum_place      
+        validated_data.pop('vacant_places', None)    
         event = Event.objects.create(vacant_places=vacant_places, **validated_data)
         return event
     
