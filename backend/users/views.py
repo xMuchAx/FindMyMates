@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from users.models import User
 from events.models import Event
 from rest_framework import viewsets, status
-from users.serializer import UserSerializer, UserUpdateSerializer
+from users.serializer import UserSerializer, UserUpdateSerializer,  UserCreateSerializer
 from events.serializer import EventSerializer
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
@@ -22,6 +22,10 @@ from django.db.models import Q
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return UserCreateSerializer
+        return UserSerializer
 
     @swagger_auto_schema(
     method='post',
@@ -51,10 +55,9 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"message": "Wrong password"}, status=401)
 
 
-    @swagger_auto_schema(method='post', request_body=UserSerializer, responses={201: 'Created', 422: 'Unprocessable Entity'})
+    @swagger_auto_schema(method='post', request_body=UserCreateSerializer, responses={201: 'Created', 422: 'Unprocessable Entity'})
     @renderer_classes([JSONRenderer])
     @action(detail=False, methods=['post'])
-   
     def register(self, request, *args, **kwargs):
         serializer = UserSerializer(data=request.data)
         

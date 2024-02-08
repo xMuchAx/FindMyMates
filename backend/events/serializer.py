@@ -27,7 +27,7 @@ class EventSerializer(serializers.ModelSerializer):
 class  EventCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        exclude = ['duration']
+        exclude = ['duration', 'vacant_places']
     
         
 
