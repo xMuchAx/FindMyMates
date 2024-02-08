@@ -19,7 +19,7 @@ const EventRecommendation = () => {
       try {
         let eventData;
         eventData = await callApi(`http://localhost:8000/user/recommendation/${userId}/`, 'GET', null, token);
-        setEventDataByGameAndLoc(eventData.result_all_conditions);
+        setEventDataByGameAndLoc(eventData.result_game_location);
         setEventDataByGameOrLoc(eventData.result_game_location);
         setEventDataByLoc(eventData.result_location);
 
@@ -56,7 +56,9 @@ const EventRecommendation = () => {
 
   return (
     <View>
-      <Text style={styles.title}>Events </Text>
+      {eventDataByGameAndLoc && eventDataByGameAndLoc.length > 0 && (
+        <Text style={styles.title}>Events</Text>
+      )}
       <View>
       <ScrollView
         style={styles.grid}
@@ -98,23 +100,8 @@ const EventRecommendation = () => {
 
 
 
-      <Text>Liste des événements recommandé par loc ou jeu:</Text>
-
+{/* 
       {eventDataByGameOrLoc && eventDataByGameOrLoc.map(event => (
-        <TouchableOpacity
-          key={event.id}
-          onPress={() => redirectDetailEvent(event.id)}
-          style={{ marginBottom: 10, padding: 10, backgroundColor: 'lightgray' }}
-        >
-          <Text>{event.title}</Text>
-          <Text>{event.description}</Text>
-        </TouchableOpacity>
-      ))}
-
-{/* <Text>Liste des événements dans votre ville:</Text>
-
-
-      {eventDataByLoc && eventDataByLoc.map(event => (
         <TouchableOpacity
           key={event.id}
           onPress={() => redirectDetailEvent(event.id)}
@@ -135,7 +122,6 @@ const styles = StyleSheet.create({
   grid: {
     display: "flex",
     flexDirection: "row",
-    height: 300,
     paddingRight:30,
   },
   title:{
@@ -154,7 +140,7 @@ const styles = StyleSheet.create({
   },
   cardEvent:{
     borderRadius: 20,
-    height:"100%",
+    height:300,
     width : 220,
     marginLeft : 30
   },

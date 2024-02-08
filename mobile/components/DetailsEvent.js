@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { callApi } from '../apiUtils';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { useAuth } from '../AuthContext';
 import moment from 'moment';  // Importez moment
 
@@ -11,7 +11,8 @@ const DetailsEvent = () => {
   const [isJoined, setIsJoined] = useState(false); // Mise à jour du nom de la variable
   const route = useRoute();
   const { userId } = useAuth();
-  
+  const navigation = useNavigation(); // Ajout de cette ligne
+
   const { token } = useAuth();
   const [hostData, setHostData] = useState(null);
   const [imageOrga, setImageOrga] = useState("default.png");  // Ajout de l'état pour l'image de l'organisateur
@@ -126,6 +127,22 @@ const DetailsEvent = () => {
     }
   };
 
+  const deleteEvent = async (eventId) => {
+   
+    callApi(`http://localhost:8000/event/delete-event/${eventId}/`, 'DELETE', null, token);
+      
+    navigation.navigate('Home');
+
+      
+  };
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
+
+
+
 
   const formatDuration = (duration) => {
     const momentDuration = moment.duration(duration );
@@ -220,19 +237,29 @@ const DetailsEvent = () => {
 
           <Text style={styles.description}>{eventData.description}</Text>
 
-          {isJoined ? (
-            <TouchableOpacity onPress={() => leaveEvent(eventId)}>
-              <View style={styles.buttonContainer}>
-                <Text style={styles.buttonText}>Quitter</Text>
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={() => joinEvent(eventId)}>
-              <View style={styles.buttonContainer}>
-                <Text style={styles.buttonText}>Rejoindre</Text>
-              </View>
-            </TouchableOpacity>
-          )}
+          {hostData?.id === userId ? (
+        // Si l'utilisateur est l'hôte de l'événement
+        <TouchableOpacity onPress={() => deleteEvent(eventId)}>
+          <View style={styles.buttonContainer}>
+            <Text style={styles.buttonText}>Supprimer</Text>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        // Sinon, affiche les boutons "Rejoindre" ou "Quitter"
+        isJoined ? (
+          <TouchableOpacity onPress={() => leaveEvent(eventId)}>
+            <View style={styles.buttonContainer}>
+              <Text style={styles.buttonText}>Quitter</Text>
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => joinEvent(eventId)}>
+            <View style={styles.buttonContainer}>
+              <Text style={styles.buttonText}>Rejoindre</Text>
+            </View>
+          </TouchableOpacity>
+        )
+      )}
         </View>
       )}
       

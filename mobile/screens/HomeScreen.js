@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
-    paddingBottom: 100
+    paddingBottom: 100,
+    minHeight:"70%"
   },
   title: {
     fontFamily: "Outfit Bold",

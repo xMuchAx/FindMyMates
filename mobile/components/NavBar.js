@@ -5,25 +5,32 @@ import { useNavigation } from '@react-navigation/native';
 const NavBar = ({ bubblePositionInit, route }) => {
   const navigation = useNavigation();
   const [bubblePosition, setBubblePosition] = useState(new Animated.Value(bubblePositionInit));
+
   const [isGameClicked, setGameClicked] = useState(false);
   const [isHomeClicked, setHomeClicked] = useState(false);
   const [isEventClicked, setEventClicked] = useState(false);
   const [isProfilClicked, setProfilClicked] = useState(false);
+
   const [areTextsVisibleHome, setAreTextsVisibleHome] = useState(true);
   const [areTextsVisibleGame, setAreTextsVisibleGame] = useState(true);
   const [areTextsVisibleProfil, setAreTextsVisibleProfil] = useState(true);
+  const [areTextsVisibleEvent, setAreTextsVisibleEvent] = useState(true);
+
 
 
 
   const handleNavigation = (screenName, index) => {
     
-    if(route=="Home"){
+      if(route=="Home"){
       setAreTextsVisibleHome(false);
       }else if(route=="Game"){
         setAreTextsVisibleGame(false)
       }else if(route=="Profil"){
         setAreTextsVisibleProfil(false)
+      }else if(route=="Event"){
+        setAreTextsVisibleEvent(false)
       }
+
       Animated.spring(bubblePosition, {
         toValue: index,
         useNativeDriver: false,
@@ -41,6 +48,8 @@ const NavBar = ({ bubblePositionInit, route }) => {
           setAreTextsVisibleGame(true);
         } else if (route === "Profil") {
           setAreTextsVisibleProfil(true);
+        }else if (route === "Event"){
+          setAreTextsVisibleEvent(true);
         }
       
         bubblePosition.setValue(bubblePositionInit);
@@ -94,11 +103,11 @@ const NavBar = ({ bubblePositionInit, route }) => {
         style={styles.buttonNav}
         onPress={() => {
           setEventClicked(true);
-          handleNavigation('EventScreen', 2);
+          handleNavigation('Event', 2);
         }}
       >
         <Image style={styles.icon} source={require("../assets/signet.png")} />
-        {(isEventClicked || route === "Event") &&  <Text style={styles.textNav}>Event</Text>}
+        {(isEventClicked || route === "Event") &&  areTextsVisibleEvent &&<Text style={styles.textNav}>Event</Text>}
       </TouchableOpacity>
 
       <TouchableOpacity

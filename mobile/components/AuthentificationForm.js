@@ -67,10 +67,10 @@ function AuthentificationForm({mode, navigation}) {
 
   return (
     <View style={styles.container}>
-      {/* <Image
+      <Image
         source={require('../assets/logo.png')}
         style={styles.image}
-      /> */}
+      />
 
       <View style={styles.containerForm}>
 
@@ -84,16 +84,21 @@ function AuthentificationForm({mode, navigation}) {
             placeholder='Name'
             onChangeText={(text) => setName(text)}
             value={name}
+            underlineColorAndroid="transparent" // désactive la bordure sous Android
+
           />
         )}
 
         <Text style={styles.text}>Email</Text>
         <TextInput
-          style={styles.input}
+          style={styles.inputName}
           placeholder="Email"
           onChangeText={(text) => setEmail(text)}
           value={email}
+          underlineColorAndroid="transparent" // désactive la bordure sous Android
+
         />
+        
         <Text style={styles.text}>Password</Text>
 
         <TextInput
@@ -102,6 +107,9 @@ function AuthentificationForm({mode, navigation}) {
           secureTextEntry
           onChangeText={(text) => setPassword(text)}
           value={password}
+          underlineColorAndroid="transparent" // désactive la bordure sous Android
+
+          
         />
         <TouchableOpacity style={styles.buttonLogin} onPress={ClickAuth}>
           <Text style={styles.buttonText}>
@@ -127,33 +135,33 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center', 
-    marginTop : 130, 
+    marginTop : 180, 
   },
   input: {
-    
-    backgroundColor: 'white',
     width: '78%',
-    height: 65,
-    borderRadius: 20,
-    marginBottom: 10,
-    padding: 8,
+    height: 45,
+    padding: 6,
     marginBottom: 40,
     paddingLeft: 20,
+    borderBottomColor:"Black",
+    borderBottomWidth:1,
+    backgroundColor: 'transparent', // rendre l'arrière-plan transparent
+
   },
   inputName: {
-    backgroundColor: 'white',
     width: '78%',
-    height: 65,
-    borderRadius: 20,
-    marginBottom: 10,
-    padding: 8,
+    height: 45,
+    padding: 6,
     marginBottom: 40,
     paddingLeft: 20,
+    borderBottomColor:"Black",
+    borderBottomWidth:1,
+    backgroundColor: 'transparent', // rendre l'arrière-plan transparent
   },
   buttonLogin: {
     
     marginTop: 80,
-    paddingVertical: 20,
+    paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 20,
     width: '76%',
@@ -161,9 +169,10 @@ const styles = StyleSheet.create({
     display : "flex",
     alignItems : "center",
     justifyContent : "center",
+    backgroundColor:"#6E4AB5"
   },
   buttonText: {
-    color: 'red',
+    color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -171,13 +180,13 @@ const styles = StyleSheet.create({
     width: 200,
     height: 210,
     position : "absolute",
-    top : -60
+    top : -70,
   },
   text:{
     alignSelf:"flex-start",
     marginLeft: "13%",
     marginBottom:6,
-    color : "white",
+    color : "Grey",
     fontWeight : "bold",
     fontSize : 16
   }

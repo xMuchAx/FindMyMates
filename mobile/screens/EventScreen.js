@@ -1,172 +1,95 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Image, StyleSheet, Animated, Text } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../AuthContext';
+import EventList from '../components/EventList';
+import { Dimensions } from 'react-native';
+import NavBar from '../components/NavBar';
 
-const NavBar = ({ bubblePositionInit, route }) => {
+export function EventScreen() {
   const navigation = useNavigation();
-  const [bubblePosition, setBubblePosition] = useState(new Animated.Value(bubblePositionInit));
-  const [isGameClicked, setGameClicked] = useState(false);
-  const [isHomeClicked, setHomeClicked] = useState(false);
-  const [isEventClicked, setEventClicked] = useState(false);
-  const [isProfilClicked, setProfilClicked] = useState(false);
-  const [areTextsVisibleHome, setAreTextsVisibleHome] = useState(true);
-  const [areTextsVisibleGame, setAreTextsVisibleGame] = useState(true);
-  const [areTextsVisibleProfil, setAreTextsVisibleProfil] = useState(true);
+  const { isLoggedIn } = useAuth();
 
+  const userIsLoggedIn = isLoggedIn();
 
+  // Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+  if (!userIsLoggedIn) {
+    navigation.navigate('Login');
+  }
 
-  const handleNavigation = (screenName, index) => {
+  const [eventInfo, setEventInfo] = useState('MyEvent');
+  console.log("testttttttttt" + eventInfo)
+
+  const handlePressNextEvent = () => {
+    setEventInfo('NextEvent');
+  };
+
+  const handlePressMyEvent = () => {
     
-    if(route=="Home"){
-      setAreTextsVisibleHome(false);
-      }else if(route=="Game"){
-        setAreTextsVisibleGame(false)
-      }else if(route=="Profil"){
-        setAreTextsVisibleProfil(false)
-      }
-    Animated.spring(bubblePosition, {
-      toValue: index,
-      useNativeDriver: false,
-    }).start(({ finished }) => {
-      // Check if the animation finished successfully
-      if (finished) {
-        // Navigate to the selected screen
-          setHomeClicked(false);
-          setGameClicked(false);
-          setEventClicked(false);
-          setProfilClicked(false);
+    setEventInfo('MyEvent');
+  };
 
-        if(route=="Home"){
-          setAreTextsVisibleHome(true)
-
-        }else if(route=="Game"){
-          setAreTextsVisibleGame(true)
-
-        }else if(route=="Profil"){
-          setAreTextsVisibleProfil(true)
-        }
-
-        bubblePosition.setValue(bubblePositionInit);
-        navigation.navigate(screenName);
-      }
-    });
+  const handlePressNowEvent = () => {
+  
+    setEventInfo('NowEvent');
   };
 
   return (
-    <View style={styles.navBar}>
-      {/* <Text>${route}</Text> */}
-      <Animated.View
-        style={[
-          styles.colorBubble,
-          {
-            left: bubblePosition.interpolate({
-              inputRange: [0, 1, 2, 3],
-              outputRange: ['5%', '26%', '50%', '71.5%'],
-            }),
-          },
-        ]}
-      />
+    <View style={styles.containerAll}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.containerPurple}>
+          <TouchableOpacity onPress={handlePressNextEvent} style={styles.touchable}>
+            <Text>Touchable 1</Text>
+          </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.buttonNav}
-        onPress={() => {
-          
+          <TouchableOpacity onPress={handlePressMyEvent} style={styles.touchable}>
+            <Text>Touchable 2</Text>
+          </TouchableOpacity>
 
-          setHomeClicked(true);
-          handleNavigation('Home', 0);
-        }}
-      >
-        <Image style={styles.icon} source={require("../assets/home.png")} />
-        {(isHomeClicked || route === "Home") && areTextsVisibleHome && <Text style={styles.textNav}>Home</Text>}
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.buttonNav}
-        onPress={() => {
-          
-
-          setGameClicked(true);
-          handleNavigation('Game', 1);
-        }}
-      >
-        <Image style={styles.icon} source={require("../assets/manette.png")} />
-        {(isGameClicked || route === "Game")  &&  areTextsVisibleGame &&<Text style={styles.textNav}>Game</Text>}
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.buttonNav}
-        onPress={() => {
-          setEventClicked(true);
-          handleNavigation('EventScreen', 2);
-        }}
-      >
-        <Image style={styles.icon} source={require("../assets/signet.png")} />
-        {(isEventClicked || route === "Event") &&  <Text style={styles.textNav}>Event</Text>}
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.buttonNav}
-        onPress={() => {
-          
-
-          setProfilClicked(true);
-          handleNavigation('Profil', 3);
-        }}
-      >
-        <Image style={styles.icon} source={require("../assets/profil.png")} />
-        {(isProfilClicked || route === "Profil") && areTextsVisibleProfil &&  <Text style={styles.textNav}>Profil</Text>}
-      </TouchableOpacity>
-
-     
+          <TouchableOpacity onPress={handlePressNowEvent} style={styles.touchable}>
+            <Text>Touchable 3</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <EventList eventInfo={eventInfo}/>
+        </View>
+      </ScrollView>
+      <NavBar bubblePositionInit={2} route="Event" />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  navBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 22,
-    paddingHorizontal: "5%",
-    backgroundColor: '#FDFDFD',
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
+  containerAll: {
+    flex: 1,
+    backgroundColor: "white",
+    overflow: "hidden",
   },
-  buttonNav: {
-    alignItems: 'center',
+  containerPurple:{
+    backgroundColor: "#6E4AB5",
+    width:"100%",
+    height:`${(Dimensions.get('window').height)*40/100}px`,
+    position:"absolute",
+    top:0,
+    borderBottomLeftRadius:50,
+    borderBottomRightRadius:50
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  container: {
+    marginTop: `${(Dimensions.get('window').height)*25/100}px`,
+    backgroundColor: "white",
+    borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
+    minHeight: `${(Dimensions.get('window').height)*65/100}px`,
+    
+  },
+  touchable: {
+    backgroundColor: 'lightblue',
+    marginVertical: 5,
     padding: 10,
-    display: "flex",
-    flexDirection: "row"
-  },
-  icon: {
-    height: 26,
-    width: 26,
-  },
-  colorBubble: {
-    position: 'absolute',
-    width: '25%',
-    height: 40,
-    backgroundColor: 'rgba(110, 74, 181, 0.21)',
-    zIndex: -1,
-    borderRadius: 50
-  },
-  textNav: {
-    fontFamily: "Outfit Medium",
-    marginLeft: 10,
-    color: "#6E4AB5"
-  },
-  hideTextsButton: {
-    backgroundColor: 'red',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  hideTextsButtonText: {
-    color: 'white',
-    textAlign: 'center',
   },
 });
 
-export default NavBar;
+export default EventScreen;

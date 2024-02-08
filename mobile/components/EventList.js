@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../AuthContext';
 import CountdownTimer from './CountDownTimer';
 
-const EventList = ({ nameGame, next, searchText }) => {
+const EventList = ({ nameGame, next, searchText, eventInfo }) => {
   const [eventData, setEventData] = useState(null);
   const navigation = useNavigation();
   const { token, userId } = useAuth();
@@ -14,6 +14,7 @@ const EventList = ({ nameGame, next, searchText }) => {
     const fetchData = async () => {
       try {
         let fetchedData;
+        console.log("okkkkkkk" + eventInfo)
 
         if (nameGame != null) {
           fetchedData = await callApi(`http://localhost:8000/event/search-event_by-game/${nameGame}/`, 'GET', null, token);
@@ -21,11 +22,19 @@ const EventList = ({ nameGame, next, searchText }) => {
           fetchedData = await callApi(`http://localhost:8000/event/event-history/list/${userId}/`, 'GET', null, token);
         } else if (searchText != null) {
           fetchedData = await callApi(`http://localhost:8000/event/search-event_by_name/${searchText}/`, 'GET', null, token);
-        } else {
+        } else if(eventInfo=="MyEvent"){
+          fetchedData = await callApi(`http://localhost:8000/event/search-event_by-host/${userId}/`, 'GET', null, token);
+        }else if(eventInfo=="NextEvent"){
+          fetchedData = await callApi(`http://localhost:8000/event/event-history/list/${userId}/`, 'GET', null, token);
+
+        }else if(eventInfo=="NowEvent"){
+          fetchedData = await callApi(`http://localhost:8000/event/search-event_by_name/${searchText}/`, 'GET', null, token);
+        }else{
           fetchedData = await callApi('http://localhost:8000/event/list/', 'GET', null, token);
         }
 
         setEventData(fetchedData);
+
       } catch (error) {
         console.error('Erreur lors de la récupération des données d\'événement :', error);
       }
@@ -33,7 +42,7 @@ const EventList = ({ nameGame, next, searchText }) => {
 
     fetchData();
 
-    const intervalId = setInterval(fetchData, 1000);
+    const intervalId = setInterval(fetchData, 10000);
 
     return () => clearInterval(intervalId);
   }, [nameGame, next, userId, token]);
@@ -61,14 +70,14 @@ const EventList = ({ nameGame, next, searchText }) => {
 
   return (
     <View>
-      {next && eventData && eventData.length > 0 && (
+      {next && eventData && eventData.length > 0 && eventInfo == undefined && (
         <View>
           <Text style={[styles.title, { fontSize: 24, marginTop: 40 }]}>Prochain événement</Text>
           <CountdownTimer targetDate={eventData[0]?.event?.date_start} style={{ zIndex: 5 }} />
         </View>
       )}
 
-      {next && eventData && eventData.length > 0 && (
+      {next && eventData && eventData.length > 0 && eventData[0]?.event && eventInfo == undefined &&(
         <TouchableOpacity
           key={eventData[0]?.event?.id}
           onPress={() => redirectDetailEvent(eventData[0]?.event?.id, eventData[0]?.event?.avatar?.substring(eventData[0]?.event?.avatar.lastIndexOf('/') + 1))}
@@ -89,7 +98,7 @@ const EventList = ({ nameGame, next, searchText }) => {
         </TouchableOpacity>
       )}
 
-      {!next && eventData && eventData.map(event => {
+      {!next && eventData && eventData.length > 0 && eventData.map(event => {
         const key = event.id;
         const title = event.title;
         const location = event.location;
