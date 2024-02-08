@@ -39,7 +39,7 @@ export function SearchEventScreen()  {
           <TextInput
                 style={styles.searchInput}
                 placeholder="Search games..."
-                defaultValue={newText}  // Utiliser defaultValue pour définir le texte par défaut
+                // defaultValue={newText}  // Utiliser defaultValue pour définir le texte par défaut
                 value={newText}
                 onChangeText={setNewText}
                 onSubmitEditing={handleSearchSubmit}
