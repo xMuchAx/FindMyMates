@@ -21,7 +21,7 @@ export function ProfilScreen() {
       navigation.navigate('Login');
     }
 
-    
+
 
   return (
     
@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   container: {
-    paddingTop: 40,
     marginTop: `${(Dimensions.get('window').height)*25/100}px`,
     backgroundColor: "white",
     borderTopRightRadius: 30,
@@ -73,22 +72,7 @@ const styles = StyleSheet.create({
     marginLeft:"7%",
 
   },
-  title: {
-    fontFamily: "Outfit Bold",
-    fontSize: 24,
-    marginLeft: "8%",
-    marginBottom: 20,
-  },
-  searchInput:{
-    backgroundColor : "white",
-    height : 50,
-    width: "70%",
-    marginTop: 75,
-    marginLeft:"15%",
-    borderRadius : 50,
-    paddingLeft : 15,
-    fontFamily : "Outfit Medium",
-    borderWidth:0
-  },
+  
+  
   
 });

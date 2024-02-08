@@ -20,7 +20,7 @@ const EventList = ({ nameGame, next, searchText }) => {
         } else if (next) {
           fetchedData = await callApi(`http://localhost:8000/event/event-history/list/${userId}/`, 'GET', null, token);
         } else if (searchText != null) {
-          fetchedData = await callApi(`http://localhost:8000/event/search-event_by-name/${searchText}/`, 'GET', null, token);
+          fetchedData = await callApi(`http://localhost:8000/event/search-event_by_name/${searchText}/`, 'GET', null, token);
         } else {
           fetchedData = await callApi('http://localhost:8000/event/list/', 'GET', null, token);
         }
@@ -94,13 +94,14 @@ const EventList = ({ nameGame, next, searchText }) => {
         const title = event.title;
         const location = event.location;
         const date = event.date_start;
-        const imageUrl = event.image;
+        const imageUrl = event.avatar;
         const image = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+
 
         return (
           <TouchableOpacity
             key={key}
-            onPress={() => redirectDetailEvent(key)}
+            onPress={() => redirectDetailEvent(key, image)}
             style={styles.cardEvent}
           >
             <Image style={styles.imgGame} source={require(`../assets/${image}`)} />
