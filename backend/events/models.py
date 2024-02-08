@@ -12,7 +12,7 @@ class Event(models.Model):
     duration = models.DurationField(blank=True)
     location = models.CharField(max_length=255, null=True)
     game = models.CharField(max_length=255, null=True)
-    maximum_place = models.IntegerField(null=True)
+    maximum_place = models.IntegerField()
     vacant_places = models.IntegerField()
     avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png')
 
@@ -21,6 +21,7 @@ class Event(models.Model):
     def get_members(self):
         return EventHistory.objects.filter(event=self)
     def save(self, *args, **kwargs):
+        self.vacant_places = self.maximum_place
         if self.date_start and self.date_end:
             self.duration = self.date_end - self.date_start
         super().save(*args, **kwargs)

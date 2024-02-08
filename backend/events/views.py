@@ -39,7 +39,7 @@ class EventViewSet(viewsets.ModelViewSet):
     @renderer_classes([JSONRenderer])
     @action(detail=False, methods=['get'])
     def search_event_by_name(self, request, name):
-        events = Event.objects.filter(name=name)
+        events = Event.objects.filter(title__icontains=name)
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
     
