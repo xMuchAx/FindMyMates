@@ -21,7 +21,7 @@ class EventViewSet(viewsets.ModelViewSet):
             return EventCreateSerializer
         return EventSerializer
  
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(
     method='get',
@@ -83,28 +83,29 @@ class EventViewSet(viewsets.ModelViewSet):
     # @renderer_classes([JSONRenderer])
     # @action(detail=False, methods=['get'])
     
-    # # def get_events_in_progress_for_user(self, request, user):
-    # #     current_time = timezone.now()
+    def get_events_in_progress_for_user(self, request, user):
+        current_time = timezone.now()
         
-    # #     events_in_progress = []
-    # #     events_history = EventHistory.objects.filter(user=user)
+        events_in_progress = []
+        events_history = EventHistory.objects.filter(user=user)
         
-      
-        
-    # #     for event_history in events_history: 
-    # #         print('aaa')
+        for event_history in events_history: 
+            event_id = event_history.event.id
+            event = Event.objects.filter(id = event_id ).first()
+            start_time = event.date_start
+            end_time = event.date_end
 
-    # #         event_id = event_history.event
-    # #         print(event_id.id)
-
-    # #     return Response('ok')
-
+            if start_time <= current_time <= end_time:
+                    events_in_progress.append(event)
+            serializer = self.get_serializer(events_in_progress, many=True)     
+        return Response(serializer.data)
+    
          
 
 class EventHistoryViewSet(viewsets.ModelViewSet):
     queryset = EventHistory.objects.all()
     serializer_class = EventHistorySerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
 
     def create(self, request, *args, **kwargs):
@@ -220,7 +221,7 @@ class EventHistoryViewSet(viewsets.ModelViewSet):
 class EventFavoriViewSet(viewsets.ModelViewSet):
     queryset = EventUserFavori.objects.all()
     serializer_class = EventUserFavoriSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     lookup_field = 'user'
     def get_serializer_class(self):
