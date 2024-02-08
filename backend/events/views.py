@@ -20,6 +20,7 @@ class EventViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return EventCreateSerializer
         return EventSerializer
+ 
     # permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(
@@ -79,6 +80,7 @@ class EventHistoryViewSet(viewsets.ModelViewSet):
     queryset = EventHistory.objects.all()
     serializer_class = EventHistorySerializer
     # permission_classes = [IsAuthenticated]
+    
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -100,7 +102,6 @@ class EventHistoryViewSet(viewsets.ModelViewSet):
         else:
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
-            
             event.vacant_places -= 1
             event.save()
             
