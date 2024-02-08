@@ -1,5 +1,5 @@
 from events.models import Event, EventHistory, EventUserFavori, Game
-from events.serializer import  EventSerializer, EventHistorySerializer, GameSerializer, EventUserFavoriSerializer, UserEventHistoryDetailSerializer, EventCreateSerializer
+from events.serializer import  EventSerializer, EventHistorySerializer, GameSerializer, EventUserFavoriSerializer, UserEventHistoryDetailSerializer, EventCreateSerializer, EventUserDetailFavoriSerializer
 from rest_framework import viewsets,  generics, status
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
@@ -21,7 +21,7 @@ class EventViewSet(viewsets.ModelViewSet):
             return EventCreateSerializer
         return EventSerializer
  
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(
     method='get',
@@ -75,11 +75,37 @@ class EventViewSet(viewsets.ModelViewSet):
                 events_in_progress.append(event)
         serializer = self.get_serializer(events_in_progress, many=True)     
         return  Response(serializer.data)
+    
+    
+    # @swagger_auto_schema(
+    # method='get',
+    # responses={200: EventSerializer(many=True)},)
+    # @renderer_classes([JSONRenderer])
+    # @action(detail=False, methods=['get'])
+    
+    def get_events_in_progress_for_user(self, request, user):
+        current_time = timezone.now()
+        
+        events_in_progress = []
+        events_history = EventHistory.objects.filter(user=user)
+        
+        for event_history in events_history: 
+            event_id = event_history.event.id
+            event = Event.objects.filter(id = event_id ).first()
+            start_time = event.date_start
+            end_time = event.date_end
+
+            if start_time <= current_time <= end_time:
+                    events_in_progress.append(event)
+            serializer = self.get_serializer(events_in_progress, many=True)     
+        return Response(serializer.data)
+    
+         
 
 class EventHistoryViewSet(viewsets.ModelViewSet):
     queryset = EventHistory.objects.all()
     serializer_class = EventHistorySerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
 
     def create(self, request, *args, **kwargs):
@@ -201,6 +227,7 @@ class EventFavoriViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in  ['create', 'update']:
             return EventUserFavoriSerializer
+        return EventUserDetailFavoriSerializer
 
 
     def create(self, request, *args, **kwargs):
@@ -232,7 +259,7 @@ class EventFavoriViewSet(viewsets.ModelViewSet):
     
     @renderer_classes([JSONRenderer])
     @action(detail=False, methods=['post'])
-    def event_favorites(self, request, *args, **kwargs):
+    def event_favorites(self, request):
        try:
           user =  request.data.get('user')
           event = EventUserFavori.objects.filter(user = user)

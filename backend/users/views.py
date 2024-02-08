@@ -92,6 +92,7 @@ class UserViewSet(viewsets.ModelViewSet):
             'username': openapi.Schema(type=openapi.TYPE_STRING),  
             'password': openapi.Schema(type=openapi.TYPE_STRING),
             'bio': openapi.Schema(type=openapi.TYPE_STRING),
+            'email': openapi.Schema(type=openapi.TYPE_STRING),
         },  required=['user'], 
     ))
     @action(detail=False, methods=['put'])
@@ -102,6 +103,8 @@ class UserViewSet(viewsets.ModelViewSet):
             user.username = data['username']
         if 'password' in data:
             user.password =  make_password(data["password"])
+        if 'email' in data:
+            user.email = data["email"]
         if 'bio' in data:
             user.bio = data['bio']
         user.save()
