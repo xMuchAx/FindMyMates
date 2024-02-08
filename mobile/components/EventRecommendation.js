@@ -50,8 +50,8 @@ const EventRecommendation = () => {
     );
   }
 
-  const redirectDetailEvent = (eventId) => {
-    navigation.navigate('DetailsEvent', { eventId });
+  const redirectDetailEvent = (eventId, eventImage) => {
+    navigation.navigate('DetailsEvent', { eventId, eventImage });
   };
 
   return (
@@ -66,12 +66,12 @@ const EventRecommendation = () => {
         {eventDataByGameAndLoc && eventDataByGameAndLoc.map(event => (
           <TouchableOpacity
             key={event.id}
-            onPress={() => redirectDetailEvent(event.id)}
+            onPress={() => redirectDetailEvent(event.id, event.avatar)}
             style={styles.cardEvent}
             >
             
             <Image style={styles.imgGame}   source={require(`../assets${event.avatar}`)}/>
-            {formatEventDate(event.date)}
+            {formatEventDate(event.date_start)}
             <View style={styles.containerInfo}>
               <Text style={styles.titleEvent}>{event.title}</Text>
               <View style={styles.containerLoc}>
@@ -139,11 +139,10 @@ const styles = StyleSheet.create({
     paddingRight:30,
   },
   title:{
-    marginTop: 30,
     fontFamily:"Outfit Bold",
     fontSize: 24,
-    marginLeft:25,
-    marginBottom: 15
+    marginLeft:"8%",
+    marginBottom: 20
   },
   imgGame:{ 
     position:"absolute",
@@ -190,7 +189,7 @@ const styles = StyleSheet.create({
   },
   location:{
     marginTop : 10,
-    fontSize: 15,
+    fontSize: 17,
     color: "white",
     left: 10,
     fontFamily : "Outfit Medium",
