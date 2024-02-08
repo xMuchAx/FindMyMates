@@ -36,11 +36,13 @@ export function EventByGameScreen() {
       
       <View style={styles.containerGame}>
 
-      <Image style={styles.imgGame}   source={require(`../assets/MarioKartBackground.avif`)}/>
+        <Image style={styles.imgGame}   source={require(`../assets/largeImage/${imageGame}`)}/>
 
       </View>
 
       <View style={styles.container}>
+        <Text style={styles.title}>Liste des événements {nameGame} :</Text>
+
         <EventList nameGame={nameGame}/>
       </View>
 
@@ -71,13 +73,13 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
-    paddingBottom: 100
+    paddingBottom: 100,
   },
   title: {
     fontFamily: "Outfit Bold",
-    fontSize: 26,
-    marginLeft: 25,
-    marginBottom: 15,
+    fontSize: 19,
+    width:"100%",
+    textAlign:"center"
   },
   
   imgGame:{

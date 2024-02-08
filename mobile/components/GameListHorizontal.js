@@ -55,10 +55,10 @@ const GameListHorizontal = () => {
             <TouchableOpacity
               key={item.id}
               style={styles.gameItem}
-              onPress={() => DisplayListEventByGame(item.name, item.avatar, item.event_number)}
+              onPress={() => DisplayListEventByGame(item.name, item.url, item.event_number)}
             >
               <View style={styles.imgBefore}></View>
-              <Image style={styles.imgGame} source={require(`../assets/${item.avatar}`)} />
+              <Image style={styles.imgGame} source={require(`../assets/${item.url}`)} />
               <LinearGradient
                 colors={['rgba(0, 0, 0, 0.2)', 'black']}
                 locations={[0.7, 1]}

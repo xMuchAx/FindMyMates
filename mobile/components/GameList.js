@@ -37,9 +37,9 @@ const GameList = () => {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.gameItem}
-            onPress={() => DisplayListEventByGame(item.name, item.avatar, item.event_number)}
+            onPress={() => DisplayListEventByGame(item.name, item.url, item.event_number)}
           >
-              <Image style={styles.imgGame} source={require(`../assets/${item.avatar}`)} />
+              <Image style={styles.imgGame} source={require(`../assets/${item.url}`)} />
             <Text>{item.name}</Text>
           </TouchableOpacity>
         )}

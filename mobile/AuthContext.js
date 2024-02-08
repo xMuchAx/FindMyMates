@@ -5,6 +5,8 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [searchText, setSearchText] = useState(null); // Ajout de la propriété searchText
+
 
   const login = (newToken, newUserId) => {
     setToken(newToken);
@@ -21,7 +23,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, userId, login, logout, isLoggedIn }}>
+    <AuthContext.Provider value={{ token, userId, login, logout, isLoggedIn, setSearchText, searchText }}>
       {children}
     </AuthContext.Provider>
   );

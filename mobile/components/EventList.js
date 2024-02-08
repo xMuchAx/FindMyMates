@@ -3,33 +3,40 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { callApi } from '../apiUtils';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../AuthContext';
+import CountdownTimer from './CountDownTimer';
 
-const EventList = ({ nameGame }) => {
+const EventList = ({ nameGame, next, searchText }) => {
   const [eventData, setEventData] = useState(null);
   const navigation = useNavigation();
-  const { token } = useAuth();
-  const { userId } = useAuth();
+  const { token, userId } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let eventData;
+        let fetchedData;
 
         if (nameGame != null) {
-          eventData = await callApi(`http://localhost:8000/event/search-event_by-game/${nameGame}/`, 'GET', null, token);
+          fetchedData = await callApi(`http://localhost:8000/event/search-event_by-game/${nameGame}/`, 'GET', null, token);
+        } else if (next) {
+          fetchedData = await callApi(`http://localhost:8000/event/event-history/list/${userId}/`, 'GET', null, token);
+        } else if (searchText != null) {
+          fetchedData = await callApi(`http://localhost:8000/event/search-event_by-name/${searchText}/`, 'GET', null, token);
         } else {
-          eventData = await callApi('http://localhost:8000/event/list/', 'GET', null, token);
+          fetchedData = await callApi('http://localhost:8000/event/list/', 'GET', null, token);
         }
 
-        console.log('Event Data:', eventData);
-        setEventData(eventData);
+        setEventData(fetchedData);
       } catch (error) {
         console.error('Erreur lors de la récupération des données d\'événement :', error);
       }
     };
 
     fetchData();
-  }, [nameGame]);
+
+    const intervalId = setInterval(fetchData, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [nameGame, next, userId, token]);
 
   function formatEventDate(dateString) {
     const eventDate = new Date(dateString);
@@ -37,51 +44,81 @@ const EventList = ({ nameGame }) => {
     const formattedDate = eventDate.toLocaleDateString('fr-FR', options);
     let [day, month] = formattedDate.split(' ');
     month = month.replace(/\./g, '');
-  
-    // Calculer la largeur minimale nécessaire en fonction de la longueur du texte
-    const minCardDateWidth = Math.max(month.length, 3) * 16; // Ajustez la taille en conséquence
-  
+
+    const minCardDateWidth = Math.max(month.length, 3) * 16;
+
     return (
       <View style={[styles.cardDate, { width: minCardDateWidth }]}>
         <Text style={styles.day}>{day}</Text>
-        {'\n'}
         <Text style={styles.month}>{month.toUpperCase()}</Text>
       </View>
     );
   }
 
-  const redirectDetailEvent = (eventId) => {
-    navigation.navigate('DetailsEvent', { eventId });
+  const redirectDetailEvent = (eventId, eventImage) => {
+    navigation.navigate('DetailsEvent', { eventId, eventImage });
   };
 
   return (
-      <View>
-        <Text style={styles.title}>Liste des événements {nameGame || ""}:</Text>
-        {eventData && eventData.map(event => (
-          <TouchableOpacity
-            key={event.id}
-            onPress={() => redirectDetailEvent(event.id)}
-            style={styles.cardEvent}
-            >
-            
-            <Image style={styles.imgGame}   source={require(`../assets/backgroundEvent.jpg`)}/>
-            {formatEventDate(event.date)}
-            <View style={styles.containerInfo}>
-              <Text style={styles.titleEvent}>{event.title}</Text>
-              <View style={styles.containerLoc}>
-                <Image style={styles.imgLoc}   source={require(`../assets/pinPurple.png`)}/>
+    <View>
+      {next && eventData && eventData.length > 0 && (
+        <View>
+          <Text style={[styles.title, { fontSize: 24, marginTop: 40 }]}>Prochain événement</Text>
+          <CountdownTimer targetDate={eventData[0]?.event?.date_start} style={{ zIndex: 5 }} />
+        </View>
+      )}
 
-                <Text style={styles.location}>{event.location}</Text>
+      {next && eventData && eventData.length > 0 && (
+        <TouchableOpacity
+          key={eventData[0]?.event?.id}
+          onPress={() => redirectDetailEvent(eventData[0]?.event?.id, eventData[0]?.event?.avatar?.substring(eventData[0]?.event?.avatar.lastIndexOf('/') + 1))}
+          style={styles.cardEvent}
+        >
+          <Image style={styles.imgGame} source={require(`../assets/${eventData[0]?.event?.avatar?.substring(eventData[0]?.event?.avatar.lastIndexOf('/') + 1)}`)} />
+          {formatEventDate(eventData[0]?.event?.date_start)}
+          <View style={styles.containerInfo}>
+            <Text style={styles.titleEvent}>{eventData[0]?.event?.title}</Text>
+            <View style={styles.containerLoc}>
+              <Image style={styles.imgLoc} source={require(`../assets/pinPurple.png`)} />
+              <Text style={styles.location}>{eventData[0]?.event?.location}</Text>
+            </View>
+          </View>
+          <View style={styles.arrowRedirect}>
+            <Image style={{ height: 14, width: 14 }} source={require(`../assets/arrowRightWhite.png`)} />
+          </View>
+        </TouchableOpacity>
+      )}
+
+      {!next && eventData && eventData.map(event => {
+        const key = event.id;
+        const title = event.title;
+        const location = event.location;
+        const date = event.date_start;
+        const imageUrl = event.image;
+        const image = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+
+        return (
+          <TouchableOpacity
+            key={key}
+            onPress={() => redirectDetailEvent(key)}
+            style={styles.cardEvent}
+          >
+            <Image style={styles.imgGame} source={require(`../assets/${image}`)} />
+            {formatEventDate(date)}
+            <View style={styles.containerInfo}>
+              <Text style={styles.titleEvent}>{title}</Text>
+              <View style={styles.containerLoc}>
+                <Image style={styles.imgLoc} source={require(`../assets/pinPurple.png`)} />
+                <Text style={styles.location}>{location}</Text>
               </View>
             </View>
             <View style={styles.arrowRedirect}>
-            <Image style={{height:14, width:14}}   source={require(`../assets/arrowRightWhite.png`)}/>
-
+              <Image style={{ height: 14, width: 14 }} source={require(`../assets/arrowRightWhite.png`)} />
             </View>
-            
           </TouchableOpacity>
-        ))}
-      </View>
+        );
+      })}
+    </View>
   );
 };
 
@@ -92,7 +129,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontFamily:"Outfit Bold",
     fontSize: 21,
-    marginLeft:25,
+    marginLeft:"8%",
     marginBottom: 15
   },
   imgGame:{ 
@@ -105,16 +142,16 @@ const styles = StyleSheet.create({
   cardEvent:{
     borderRadius: 20,
     height:250,
-    width : "78%",
-    marginLeft : "11%",
+    width : "84%",
+    marginLeft : "8%",
     shadowColor: "#000",
     shadowOffset: {
     width: 0,
     height: 3,
     },
-    shadowOpacity: 0.15,
-    shadowRadius: 4.84,
-    elevation: 7, // Pour Android
+    shadowOpacity: 0.40,
+    shadowRadius: 5,
+    elevation: 10, // Pour Android
     marginTop : 40
   },
   month:{

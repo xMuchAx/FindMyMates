@@ -1,6 +1,8 @@
 import NavBar from '../components/NavBar';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../AuthContext';
+import EventList from '../components/EventList';
+import { useState } from 'react';
 
 import { View, Text, ScrollView, TextInput, StyleSheet } from 'react-native';
 
@@ -11,9 +13,13 @@ export function HomeScreen() {
   const navigation = useNavigation();
   const { isLoggedIn } = useAuth();
   const { token } = useAuth();
+  const { searchText, setSearchText } = useAuth(); 
+
   
   function handleSearchSubmit() {
-    navigation.navigate('SearchEvent', { searchText: searchText });
+    console.log("envoie")
+    navigation.navigate('SearchEvent'); // Envoyer la valeur actuelle de searchText
+
   };
 
   const userIsLoggedIn = isLoggedIn();
@@ -35,14 +41,20 @@ export function HomeScreen() {
         <TextInput
               style={styles.searchInput}
               placeholder="Search games..."
+              onChangeText={(text) => setSearchText(text)} // Mettre à jour searchText avec la valeur du champ de recherche
               onSubmitEditing={handleSearchSubmit}
 
             />
       </View>
         <View style={styles.container}>
+
           <Text style={styles.title}>Games</Text>
           <GameListHorizontal />
-          {/* <EventList/> */}
+
+          <View style={{marginBottom:40}}>
+            <EventList next={true}/>
+          </View>
+
           <EventRecommendation />
         </View>
       </ScrollView>
@@ -71,9 +83,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "Outfit Bold",
-    fontSize: 26,
-    marginLeft: 25,
-    marginBottom: 15,
+    fontSize: 24,
+    marginLeft: "8%",
+    marginBottom: 20,
   },
   searchInput:{
     backgroundColor : "white",

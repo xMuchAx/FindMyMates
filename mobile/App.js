@@ -15,6 +15,7 @@ import { ProfilScreen } from './screens/ProfilScreen';
 import { GameScreen } from './screens/GameScreen';
 import { EventByGameScreen } from './screens/EventByGameScreen';
 import { WelcomeScreen } from './screens/WelcomeScreen';
+import { SearchEventScreen } from './screens/SearchEventScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,7 @@ function App() {
             <Stack.Screen name="DetailsEvent" component={DetailsEventScreen} />
             <Stack.Screen name="Registration" component={RegistrationScreen} />
             <Stack.Screen name="Profil" component={ProfilScreen} />
+            <Stack.Screen name="SearchEvent" component={SearchEventScreen} />
             <Stack.Screen name="Game" component={GameScreen} />
             <Stack.Screen name="EventByGame" component={EventByGameScreen} />
           </Stack.Navigator>
