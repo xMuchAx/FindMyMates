@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Image, StyleSheet, Animated, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../AuthContext';
 
 const NavBar = ({ bubblePositionInit, route }) => {
+  const { setEventInfo, eventInfo } = useAuth();
   const navigation = useNavigation();
   const [bubblePosition, setBubblePosition] = useState(new Animated.Value(bubblePositionInit));
 
@@ -77,6 +79,7 @@ const NavBar = ({ bubblePositionInit, route }) => {
         style={styles.buttonNav}
         onPress={() => {
           
+          setEventInfo(null)
 
           setHomeClicked(true);
           handleNavigation('Home', 0);
@@ -102,6 +105,8 @@ const NavBar = ({ bubblePositionInit, route }) => {
       <TouchableOpacity
         style={styles.buttonNav}
         onPress={() => {
+          setEventInfo("MyEvent")
+
           setEventClicked(true);
           handleNavigation('Event', 2);
         }}

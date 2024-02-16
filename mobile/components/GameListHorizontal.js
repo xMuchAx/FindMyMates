@@ -33,7 +33,7 @@ const GameListHorizontal = () => {
   useEffect(() => {
     // Utiliser la méthode scrollTo pour définir la position initiale après le rendu du composant
     if (scrollViewRef.current && gameData) {
-      const initialX = ((gameData.length * ((150 + 30)) / 2) - screenWidth / 2)-20;
+      const initialX = ((gameData.length * ((150 + 40)) / 2) - screenWidth / 2)-15;
       scrollViewRef.current.scrollTo({ x: initialX, y: 0, animated: false });
     }
   }, [gameData]);
@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     height: 215,
-    marginRight:-30
   },
   gameItem: {
     width: 150, // Ajustez la largeur de chaque élément de la liste déroulante selon vos besoins
-    marginRight: 30,
+    marginRight: 20,
     height: 205,
+    marginLeft : 20
   },
   imgGame: {
     height: "100%",

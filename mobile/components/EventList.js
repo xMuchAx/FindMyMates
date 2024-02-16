@@ -5,47 +5,83 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../AuthContext';
 import CountdownTimer from './CountDownTimer';
 
-const EventList = ({ nameGame, next, searchText, eventInfo }) => {
+const EventList = ({ nameGame, next, searchText }) => {
   const [eventData, setEventData] = useState(null);
   const navigation = useNavigation();
-  const { token, userId } = useAuth();
+  const { token, userId, eventInfo } = useAuth();
+  const [indexEvenementActuel, setIndexEvenementActuel] = useState(0);
+  const [foundEvent, setFoundEvent] = useState(false);
+
+
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         let fetchedData;
-        console.log("okkkkkkk" + eventInfo)
 
         if (nameGame != null) {
           fetchedData = await callApi(`http://localhost:8000/event/search-event_by-game/${nameGame}/`, 'GET', null, token);
         } else if (next) {
           fetchedData = await callApi(`http://localhost:8000/event/event-history/list/${userId}/`, 'GET', null, token);
+          if (next && fetchedData) {
+            let closestFutureEventIndex = null; // Initialiser l'index à null
+        
+            for (let i = 0; i < fetchedData.length; i++) {
+                const now = new Date().getTime();
+                const targetTime = new Date(fetchedData[i]?.event?.date_start).getTime();
+        
+                if (targetTime > now) {
+        
+                    if (closestFutureEventIndex === null || targetTime < new Date(fetchedData[closestFutureEventIndex]?.event?.date_start).getTime()) {
+                        closestFutureEventIndex = i; // Mettez à jour l'index si c'est le plus proche
+                    }
+                }
+            }
+        
+            if (closestFutureEventIndex !== null) {
+                console.log("L'index de l'événement le plus proche est :", closestFutureEventIndex);
+                setIndexEvenementActuel(closestFutureEventIndex);
+                setFoundEvent(true);
+            } else {
+                console.log("Aucun événement futur trouvé");
+                setFoundEvent(false);
+            }
+        }
         } else if (searchText != null) {
-          fetchedData = await callApi(`http://localhost:8000/event/search-event_by_name/${searchText}/`, 'GET', null, token);
+          fetchedData = await callApi(`http://localhost:8000/event/search-event_by-name/${searchText}/`, 'GET', null, token);
+
         } else if(eventInfo=="MyEvent"){
           fetchedData = await callApi(`http://localhost:8000/event/search-event_by-host/${userId}/`, 'GET', null, token);
+
         }else if(eventInfo=="NextEvent"){
           fetchedData = await callApi(`http://localhost:8000/event/event-history/list/${userId}/`, 'GET', null, token);
 
         }else if(eventInfo=="NowEvent"){
-          fetchedData = await callApi(`http://localhost:8000/event/search-event_by_name/${searchText}/`, 'GET', null, token);
+          fetchedData = await callApi(`http://localhost:8000/event/user_event_in_progress/${userId}/`, 'GET', null, token);
         }else{
           fetchedData = await callApi('http://localhost:8000/event/list/', 'GET', null, token);
         }
 
         setEventData(fetchedData);
 
+        
+
       } catch (error) {
         console.error('Erreur lors de la récupération des données d\'événement :', error);
       }
+
+
     };
 
     fetchData();
 
-    const intervalId = setInterval(fetchData, 10000);
+    const intervalId = setInterval(fetchData, 5000);
 
     return () => clearInterval(intervalId);
-  }, [nameGame, next, userId, token]);
+  }, [nameGame, next, userId, token, eventInfo, indexEvenementActuel]);
+
+
 
   function formatEventDate(dateString) {
     const eventDate = new Date(dateString);
@@ -70,41 +106,125 @@ const EventList = ({ nameGame, next, searchText, eventInfo }) => {
 
   return (
     <View>
-      {next && eventData && eventData.length > 0 && eventInfo == undefined && (
+      {next && eventData && eventData.length > 0 && eventInfo == undefined && foundEvent == true && (
+    <View>
+
         <View>
           <Text style={[styles.title, { fontSize: 24, marginTop: 40 }]}>Prochain événement</Text>
-          <CountdownTimer targetDate={eventData[0]?.event?.date_start} style={{ zIndex: 5 }} />
+          <CountdownTimer targetDate={eventData[indexEvenementActuel]?.event?.date_start} style={{ zIndex: 5 }} />
+          
         </View>
-      )}
+      
 
-      {next && eventData && eventData.length > 0 && eventData[0]?.event && eventInfo == undefined &&(
         <TouchableOpacity
-          key={eventData[0]?.event?.id}
-          onPress={() => redirectDetailEvent(eventData[0]?.event?.id, eventData[0]?.event?.avatar?.substring(eventData[0]?.event?.avatar.lastIndexOf('/') + 1))}
+          key={eventData[indexEvenementActuel]?.event?.id}
+          onPress={() => redirectDetailEvent(eventData[indexEvenementActuel]?.event?.id, eventData[indexEvenementActuel]?.event?.avatar?.substring(eventData[indexEvenementActuel]?.event?.avatar.lastIndexOf('/') + 1))}
           style={styles.cardEvent}
         >
-          <Image style={styles.imgGame} source={require(`../assets/${eventData[0]?.event?.avatar?.substring(eventData[0]?.event?.avatar.lastIndexOf('/') + 1)}`)} />
-          {formatEventDate(eventData[0]?.event?.date_start)}
+          <Image style={styles.imgGame} source={require(`../assets/${eventData[indexEvenementActuel]?.event?.avatar?.substring(eventData[indexEvenementActuel]?.event?.avatar.lastIndexOf('/') + 1)}`)} />
+          {formatEventDate(eventData[indexEvenementActuel]?.event?.date_start)}
           <View style={styles.containerInfo}>
-            <Text style={styles.titleEvent}>{eventData[0]?.event?.title}</Text>
+            <Text style={styles.titleEvent}>{eventData[indexEvenementActuel]?.event?.title}</Text>
             <View style={styles.containerLoc}>
               <Image style={styles.imgLoc} source={require(`../assets/pinPurple.png`)} />
-              <Text style={styles.location}>{eventData[0]?.event?.location}</Text>
+              <Text style={styles.location}>{eventData[indexEvenementActuel]?.event?.location}</Text>
             </View>
           </View>
           <View style={styles.arrowRedirect}>
             <Image style={{ height: 14, width: 14 }} source={require(`../assets/arrowRightWhite.png`)} />
           </View>
         </TouchableOpacity>
+        </View>
+
       )}
 
       {!next && eventData && eventData.length > 0 && eventData.map(event => {
-        const key = event.id;
-        const title = event.title;
-        const location = event.location;
-        const date = event.date_start;
-        const imageUrl = event.avatar;
-        const image = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+
+        var key = ""
+        var title = ""
+        var location = ""
+        var date =""
+        var imageUrl =""
+        var image =""
+
+        
+        if(eventInfo=="NextEvent"){
+
+          key = event.id;
+          if(key==undefined){
+            key = event.event.id;
+            title = event.event.title;
+            location = event.event.location;
+            date = event.event.date_start;
+            imageUrl = event.event.avatar;
+            image = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+          }else{
+            title = event.title;
+            location = event.location;
+            date = event.date_start;
+            imageUrl = event.avatar;
+            image = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+          }
+
+        }else if(eventInfo=="MyEvent"){
+
+
+          key = event.id;
+          if(key==undefined){
+            key = event.event.id;
+            title = event.event.title;
+            location = event.event.location;
+            date = event.event.date_start;
+            imageUrl = event.event.avatar;
+            image = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+          }else{
+            title = event.title;
+            location = event.location;
+            date = event.date_start;
+            imageUrl = event.avatar;
+            image = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+          }
+        }else if(eventInfo=="NowEvent"){
+
+
+          key = event.id;
+          if(key==undefined){
+            key = event.event.id;
+            title = event.event.title;
+            location = event.event.location;
+            date = event.event.date_start;
+            imageUrl = event.event.avatar;
+            image = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+          }else{
+            title = event.title;
+            location = event.location;
+            date = event.date_start;
+            imageUrl = event.avatar;
+            image = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+          }
+
+        }else{
+
+          key = event.id;
+          if(key==undefined){
+            key = event.event.id;
+            title = event.event.title;
+            location = event.event.location;
+            date = event.event.date_start;
+            imageUrl = event.event.avatar;
+            image = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+          }else{
+            title = event.title;
+            location = event.location;
+            date = event.date_start;
+            imageUrl = event.avatar;
+            image = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+          }
+        }
+
+
+        // const imageUrl = event.avatar;
+// si 00h00m00s passer a l'event next suivant
 
 
         return (
@@ -115,6 +235,7 @@ const EventList = ({ nameGame, next, searchText, eventInfo }) => {
           >
             <Image style={styles.imgGame} source={require(`../assets/${image}`)} />
             {formatEventDate(date)}
+
             <View style={styles.containerInfo}>
               <Text style={styles.titleEvent}>{title}</Text>
               <View style={styles.containerLoc}>

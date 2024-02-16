@@ -18,7 +18,6 @@ export function SearchEventScreen()  {
   const route = useRoute();
 
   const { searchText, setSearchText } = useAuth(); // Utilisez searchText et setSearchText du contexte
-  console.log("gggggggggggggggggggggg" + searchText)
   const [newText, setNewText] = useState(searchText);
 
   

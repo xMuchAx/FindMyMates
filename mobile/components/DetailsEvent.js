@@ -151,11 +151,18 @@ const DetailsEvent = () => {
     const hours = momentDuration.hours();
     const minutes = momentDuration.minutes();
   
-    if (hours === 0) {
-      return `Durée : ${minutes}min`;
-    } else if (days > 0) {
+    console.log(days+"j" + hours +"h"+ minutes)
+    if (days > 0) {
+      console.log("testttaaa")
+
       return false;
+    }else if (hours === 0) {
+      console.log("testtt")
+      return `Durée : ${minutes}min`;
+    
     }else{
+      console.log("testttbbbbb")
+
       return `Durée : ${hours}h${minutes}`;
     }
   };

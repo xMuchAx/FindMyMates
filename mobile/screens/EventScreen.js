@@ -9,6 +9,8 @@ import NavBar from '../components/NavBar';
 export function EventScreen() {
   const navigation = useNavigation();
   const { isLoggedIn } = useAuth();
+  const { setEventInfo, eventInfo } = useAuth();
+
 
   const userIsLoggedIn = isLoggedIn();
 
@@ -17,7 +19,6 @@ export function EventScreen() {
     navigation.navigate('Login');
   }
 
-  const [eventInfo, setEventInfo] = useState('MyEvent');
   console.log("testttttttttt" + eventInfo)
 
   const handlePressNextEvent = () => {
@@ -39,15 +40,15 @@ export function EventScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.containerPurple}>
           <TouchableOpacity onPress={handlePressNextEvent} style={styles.touchable}>
-            <Text>Touchable 1</Text>
+            <Text>Touchable Next</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handlePressMyEvent} style={styles.touchable}>
-            <Text>Touchable 2</Text>
+            <Text>Touchable My</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handlePressNowEvent} style={styles.touchable}>
-            <Text>Touchable 3</Text>
+            <Text>Touchable Now</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.container}>
