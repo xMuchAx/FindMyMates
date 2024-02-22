@@ -138,6 +138,15 @@ const EventList = ({ nameGame, next, searchText }) => {
 
       )}
 
+      {next && eventData && eventData.length === 0 && eventInfo == undefined && foundEvent == false && (
+
+      <View>
+        <Text style={[styles.title, { fontSize: 24, marginTop: 40 }]}>Rejoin un événement</Text>
+        <Text>Rejoins un des événement, ici le prochain événement sera affiché avec un minuteur</Text>
+      </View>
+
+      )}
+
       {!next && eventData && eventData.length > 0 && eventData.map(event => {
 
         var key = ""
