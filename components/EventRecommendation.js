@@ -61,7 +61,7 @@ const EventRecommendation = () => {
       ) : (
         <View>
         <Text style={styles.title}>Ajouter des tags</Text>
-        <Text>1ere Connexion testtttt ? Si vous souhaitez que des Evenement vous sois recommandé ajouter des tags depuis votre profil, tel que vos jeu préféré et les villes ou vous shouaitez participer !</Text>
+        <Text>1ere Connexion ALORS ? Si vous souhaitez que des Evenement vous sois recommandé ajouter des tags depuis votre profil, tel que vos jeu préféré et les villes ou vous shouaitez participer !</Text>
         </View>
       )}
       <View>
