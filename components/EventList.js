@@ -24,7 +24,9 @@ const EventList = ({ nameGame, next, searchText }) => {
           fetchedData = await callApi(`http://localhost:8000/event/search-event_by-game/${nameGame}/`, 'GET', null, token);
         } else if (next) {
           fetchedData = await callApi(`http://localhost:8000/event/event-history/list/${userId}/`, 'GET', null, token);
+          console.log("je suis la")
           if (next && fetchedData) {
+            console.log(fetchedData.length)
             let closestFutureEventIndex = null; // Initialiser l'index à null
         
             for (let i = 0; i < fetchedData.length; i++) {
@@ -35,6 +37,7 @@ const EventList = ({ nameGame, next, searchText }) => {
         
                     if (closestFutureEventIndex === null || targetTime < new Date(fetchedData[closestFutureEventIndex]?.event?.date_start).getTime()) {
                         closestFutureEventIndex = i; // Mettez à jour l'index si c'est le plus proche
+                        console.log("test :" + closestFutureEventIndex)
                     }
                 }
             }
@@ -43,6 +46,8 @@ const EventList = ({ nameGame, next, searchText }) => {
                 console.log("L'index de l'événement le plus proche est :", closestFutureEventIndex);
                 setIndexEvenementActuel(closestFutureEventIndex);
                 setFoundEvent(true);
+                console.log("test :" + closestFutureEventIndex)
+
             } else {
                 console.log("Aucun événement futur trouvé");
                 setFoundEvent(false);
